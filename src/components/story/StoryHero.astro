@@ -1,0 +1,133 @@
+---
+import PlaceholderVisual from './PlaceholderVisual.astro';
+import { formatDate, readingClock, pad } from '@/lib/format';
+
+export interface Props {
+  title: string;
+  subtitle?: string;
+  kicker?: string; // e.g. "001 / TECHNOLOGIE"
+  publishedAt: Date;
+  readingMinutes: number;
+  authors?: string[];
+  heroVariant?: 'grid' | 'orbit' | 'bars' | 'wave';
+  illustrative?: boolean;
+}
+const {
+  title,
+  subtitle,
+  kicker,
+  publishedAt,
+  readingMinutes,
+  authors = [],
+  heroVariant = 'orbit',
+  illustrative = false,
+} = Astro.props;
+---
+
+<header class="hero">
+  <div class="grid-editorial hero__grid">
+    <div class="hero__meta">
+      {kicker && <span class="mono mono--signal">{kicker}</span>}
+      <span class="mono">{formatDate(publishedAt)}</span>
+      <span class="mono">LESEZEIT {readingClock(readingMinutes)}</span>
+    </div>
+
+    <h1 class="hero__title">{title}</h1>
+
+    {subtitle && <p class="hero__subtitle">{subtitle}</p>}
+
+    <div class="hero__byline">
+      {authors.length > 0 && <span class="mono">VON {authors.join(' · ').toUpperCase()}</span>}
+      {illustrative && <span class="mono hero__flag">⚠ ILLUSTRATIVE DEMO-DATEN</span>}
+    </div>
+  </div>
+
+  <div class="hero__visual" data-reveal>
+    <PlaceholderVisual variant={heroVariant} />
+  </div>
+
+  <div class="grid-editorial">
+    <a href="#kapitel-01" class="hero__scroll mono" aria-label="Zum Anfang der Geschichte scrollen">
+      <span>SCROLL / {pad(1, 2)}</span>
+      <span class="hero__arrow" aria-hidden="true">↓</span>
+    </a>
+  </div>
+</header>
+
+<style>
+  .hero {
+    padding-top: clamp(2rem, 6vh, 5rem);
+  }
+  .hero__grid {
+    row-gap: 1.5rem;
+  }
+  .hero__meta {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .hero__title {
+    grid-column: 1 / -1;
+    font-size: clamp(3rem, 1.5rem + 11vw, 12rem);
+    line-height: 0.92;
+    margin-block: 0.5rem;
+  }
+  .hero__subtitle {
+    grid-column: 1 / -1;
+    max-width: 40ch;
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.7rem);
+    line-height: 1.35;
+    color: var(--c-ink-dim);
+  }
+  @media (min-width: 60rem) {
+    .hero__subtitle {
+      grid-column: 1 / 8;
+    }
+  }
+  .hero__byline {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .hero__flag {
+    color: var(--c-amber);
+    border: 1px solid color-mix(in oklab, var(--c-amber) 40%, transparent);
+    padding: 0.2rem 0.5rem;
+  }
+  .hero__visual {
+    margin-block: clamp(2rem, 5vw, 4rem);
+    padding-inline: var(--gutter);
+    max-width: 1680px;
+    margin-inline: auto;
+  }
+  .hero__scroll {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--c-ink-dim);
+    padding-bottom: 3rem;
+  }
+  .hero__arrow {
+    animation: nudge 1.8s var(--ease-out) infinite;
+  }
+  @keyframes nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(4px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__arrow {
+      animation: none;
+    }
+  }
+</style>

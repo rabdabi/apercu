@@ -1,0 +1,35 @@
+---
+export interface Props {
+  cite?: string;
+}
+const { cite } = Astro.props;
+---
+
+<figure class="bleed-wide pullquote" data-reveal>
+  <blockquote class="pullquote__quote">
+    <slot />
+  </blockquote>
+  {cite && <figcaption class="mono pullquote__cite">— {cite}</figcaption>}
+</figure>
+
+<style>
+  .pullquote {
+    margin-block: clamp(3rem, 7vw, 5rem);
+    padding-left: clamp(1rem, 3vw, 3rem);
+    border-left: 3px solid var(--c-accent);
+  }
+  .pullquote__quote {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.8rem, 1.2rem + 3vw, 3.6rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+    text-wrap: balance;
+  }
+  .pullquote__cite {
+    margin-top: 1.2rem;
+    color: var(--c-ink-dim);
+  }
+</style>

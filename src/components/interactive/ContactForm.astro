@@ -1,0 +1,137 @@
+---
+/**
+ * Contact form. Native POST to /api/contact; JS-enhanced for inline feedback.
+ * Honeypot `website` field; all validation is enforced server-side.
+ */
+---
+
+<form class="cf" action="/api/contact" method="post" data-contact novalidate>
+  <div class="cf__field">
+    <label for="cf-name" class="mono">Name</label>
+    <input id="cf-name" name="name" type="text" required minlength="2" maxlength="120" autocomplete="name" />
+  </div>
+
+  <div class="cf__field">
+    <label for="cf-email" class="mono">E-Mail</label>
+    <input id="cf-email" name="email" type="email" required maxlength="254" autocomplete="email" />
+  </div>
+
+  <div class="cf__field">
+    <label for="cf-message" class="mono">Nachricht</label>
+    <textarea id="cf-message" name="message" required minlength="10" maxlength="4000" rows="6"></textarea>
+  </div>
+
+  <div class="cf__hp" aria-hidden="true">
+    <label>Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <button type="submit" class="cf__submit mono" data-submit>Senden</button>
+  <p class="cf__status mono" role="status" aria-live="polite" data-status></p>
+</form>
+
+<style>
+  .cf {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 44rem;
+  }
+  .cf__field {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .cf input,
+  .cf textarea {
+    padding: 0.8rem 1rem;
+    background: var(--c-ground-sunken);
+    border: 1px solid var(--c-line-strong);
+    color: var(--c-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    width: 100%;
+  }
+  .cf textarea {
+    resize: vertical;
+  }
+  .cf input:focus-visible,
+  .cf textarea:focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: -1px;
+  }
+  .cf__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .cf__submit {
+    justify-self: start;
+    padding: 0.85rem 2rem;
+    background: var(--c-accent);
+    color: #14140f;
+    border: 0;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .cf__submit[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .cf__status {
+    min-height: 1.2em;
+  }
+  .cf__status[data-state='ok'] {
+    color: var(--c-accent);
+  }
+  .cf__status[data-state='error'] {
+    color: var(--c-red);
+  }
+  .cf__status[data-state='dev'] {
+    color: var(--c-amber);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact]');
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      status.dataset.state = '';
+      status.textContent = 'Wird gesendet …';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const data = (await res.json()) as {
+          ok?: boolean;
+          persisted?: boolean;
+          error?: string;
+        };
+
+        if (res.ok && data.ok) {
+          form.reset();
+          status.dataset.state = data.persisted === false ? 'dev' : 'ok';
+          status.textContent =
+            data.persisted === false
+              ? 'DEV-MODUS — empfangen, aber nicht gespeichert (keine Datenbank).'
+              : 'Danke — deine Nachricht ist eingegangen.';
+        } else {
+          status.dataset.state = 'error';
+          status.textContent = data.error ?? 'Bitte Eingaben prüfen.';
+        }
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent = 'Netzwerkfehler. Bitte später erneut versuchen.';
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+</script>

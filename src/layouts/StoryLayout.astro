@@ -1,0 +1,62 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import StoryProgress from '@/components/story/StoryProgress.astro';
+import ChapterNavigation from '@/components/story/ChapterNavigation.astro';
+import StoryHero from '@/components/story/StoryHero.astro';
+import StoryOutro from '@/components/story/StoryOutro.astro';
+import type { Story } from '@/lib/stories';
+
+export interface Props {
+  story: Story;
+  readingMinutes: number;
+  kicker?: string;
+}
+const { story, readingMinutes, kicker } = Astro.props;
+const { data } = story;
+const accentStyle = data.accent ? `--c-accent:${data.accent}` : undefined;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  type="article"
+  publishedTime={data.publishedAt}
+  modifiedTime={data.updatedAt}
+  authors={data.authors}
+  noindex={data.draft}
+>
+  <StoryProgress />
+  <ChapterNavigation />
+
+  <article class="story" style={accentStyle}>
+    <StoryHero
+      title={data.title}
+      subtitle={data.subtitle}
+      kicker={kicker}
+      publishedAt={data.publishedAt}
+      readingMinutes={readingMinutes}
+      authors={data.authors}
+      illustrative={data.illustrative}
+    />
+
+    <div class="story-body">
+      <slot />
+    </div>
+
+    <div class="grid-editorial">
+      <div class="col-wide">
+        <StoryOutro
+          authors={data.authors}
+          publishedAt={data.publishedAt}
+          updatedAt={data.updatedAt}
+        />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .story {
+    display: block;
+  }
+</style>

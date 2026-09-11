@@ -1,0 +1,155 @@
+---
+title: 'Achtzehn Milliarden'
+subtitle: 'Was ein Konzern zahlt, um seine Algorithmen zu behalten — und was dieser Betrag über den Wert unserer Arbeit verrät.'
+description: 'Eine Reportage über die wachsende Kluft zwischen den Gehältern, die für die Kontrolle über Algorithmen gezahlt werden, und dem Lohn für die Arbeit, die diese Systeme vermessen.'
+lang: 'de'
+publishedAt: 2026-09-11
+authors:
+  - 'Apercu association'
+topics:
+  - 'Technologie'
+  - 'Arbeit'
+  - 'Ökonomie'
+featured: true
+illustrative: true
+accent: '#c6f24e'
+heroAlt: 'Konzentrische Kreise, die ein Zentrum umlaufen — ein System, das sich um einen einzigen Punkt ordnet.'
+---
+
+import {
+  ChapterIntro,
+  StoryText,
+  SideNote,
+  FullBleedMedia,
+  SplitStory,
+  StickyStory,
+  StickyStep,
+  PullQuote,
+  StatRow,
+  StatBlock,
+  Timeline,
+  ImageReveal,
+  SourceNote,
+} from '@/components/story';
+
+<StoryText lead>
+Es gibt eine Zahl, die sich schwer vorstellen lässt, und genau deshalb erzählt man
+sie immer wieder: achtzehn Milliarden. So viel, heisst es, war es einem einzigen
+Konzern wert, die Menschen zu halten, die seine Algorithmen verstehen. Diese
+Reportage fragt nicht, ob die Zahl stimmt — sie fragt, was es über uns sagt, dass
+wir sie glauben.
+</StoryText>
+
+<SideNote label="Zur Einordnung">
+Sämtliche Zahlen in diesem Beitrag sind **illustrative Platzhalter**. Sie zeigen die
+Erzählstruktur der Plattform, nicht recherchierte Fakten. Reale, belegte Werte werden
+später in die markierten Quellen-Slots eingesetzt.
+</SideNote>
+
+<ChapterIntro number={1} title="Der Preis eines Musters" />
+
+Ein Algorithmus ist zunächst nichts als eine Regel: Wenn dies, dann das. Was ihn
+wertvoll macht, ist nicht die Regel selbst, sondern die Fähigkeit, sie an Millionen
+von Menschen gleichzeitig anzuwenden — und aus deren Reaktionen die nächste Regel zu
+lernen. Wer dieses Lernen kontrolliert, kontrolliert eine Form von Aufmerksamkeit,
+die sich in keiner Bilanz sauber verbuchen lässt.
+
+Genau hier beginnt die Verschiebung. Die Arbeit, die ein solches System **baut**, und
+die Arbeit, die es **vermisst**, driften im Preis immer weiter auseinander.
+
+<PullQuote cite="Illustratives Zitat, Platzhalter">
+Wir haben gelernt, Aufmerksamkeit zu messen. Was wir verlernt haben, ist, Arbeit zu
+bewerten, die sich nicht messen lässt.
+</PullQuote>
+
+<ChapterIntro number={2} title="Die Kluft, in Zahlen" />
+
+Um die Distanz greifbar zu machen, hilft ein Vergleich zwischen dem, was an der Spitze
+gezahlt wird, und dem, was in der Breite verdient wird. Die folgenden Werte sind
+bewusst als Platzhalter gesetzt.
+
+<StatRow label="Illustrative Grössenordnungen">
+  <StatBlock value={18} suffix=" Mrd." prefix="$" label="kolportierte Summe, um Schlüsselpersonen und Rechenkapazität zu binden" source="SOURCE_01" />
+  <StatBlock value={11000} suffix="×" label="illustratives Verhältnis zwischen Spitzenpaket und globalem Medianlohn" source="SOURCE_02" />
+  <StatBlock value={73} suffix="%" label="Anteil der Befragten, die den Systemen mehr Einfluss zutrauen als sich selbst" source="SOURCE_03" />
+</StatRow>
+
+<SourceNote id="01">
+Platzhalter für die belegte Quelle zur genannten Investitionssumme.
+</SourceNote>
+
+<SourceNote id="02">
+Platzhalter für die Berechnungsgrundlage des Gehaltsverhältnisses.
+</SourceNote>
+
+<SourceNote id="03">
+Platzhalter für die zitierte Umfrage.
+</SourceNote>
+
+<ChapterIntro number={3} title="Wie ein System entscheidet, bevor wir es merken" />
+
+<StickyStory variant="orbit" label="Sequenz / Entscheidung">
+  <StickyStep>
+    ### Signal
+    Zuerst ist da nur ein Signal: ein Klick, ein Zögern, eine halbe Sekunde länger auf
+    einem Bild. Für sich genommen bedeutet es nichts.
+  </StickyStep>
+  <StickyStep>
+    ### Muster
+    Millionen solcher Signale ergeben ein Muster. Das System erkennt es, lange bevor ein
+    Mensch es benennen könnte.
+  </StickyStep>
+  <StickyStep>
+    ### Entscheidung
+    Aus dem Muster wird eine Entscheidung — welche Nachricht du siehst, welcher Preis dir
+    angezeigt wird, welche Stelle dir vorgeschlagen wird.
+  </StickyStep>
+  <StickyStep>
+    ### Rückkopplung
+    Deine Reaktion wird zum nächsten Signal. Der Kreis schliesst sich, und er dreht sich
+    schneller als jede Aufsicht.
+  </StickyStep>
+</StickyStory>
+
+<FullBleedMedia
+  variant="wave"
+  caption="ABB. 01 — Rückkopplung als stehende Welle. Generierte Illustration, Platzhalter."
+/>
+
+<ChapterIntro number={4} title="Zwei Ökonomien, eine Oberfläche" />
+
+<SplitStory variant="bars" caption="ABB. 02 — Divergenz der Kurven">
+### Oben
+Wer die Modelle trainiert und die Rechenzentren betreibt, wird gehandelt wie ein
+knappes Rohstoffvorkommen. Die Pakete wachsen, weil das Angebot an Menschen, die diese
+Systeme wirklich verstehen, klein bleibt.
+</SplitStory>
+
+<SplitStory variant="grid" reverse caption="ABB. 03 — Die vermessene Seite">
+### Unten
+Wer von den Systemen vermessen wird — als Fahrerin, als Zusteller, als geklickte
+Zielgruppe —, erlebt das Gegenteil: mehr Transparenz über die eigene Leistung, weniger
+Verhandlungsmacht über ihren Preis.
+</SplitStory>
+
+<ChapterIntro number={5} title="Chronologie einer Verschiebung" />
+
+<Timeline
+  label="Illustrative Chronologie"
+  items={[
+    { date: '2012', title: 'Die Fläche entsteht', body: 'Plattformen beginnen, Aufmerksamkeit in Echtzeit zu messen.' },
+    { date: '2016', title: 'Das Muster verkauft sich', body: 'Vorhersage wird zum Produkt, nicht mehr nur zum Werkzeug.' },
+    { date: '2020', title: 'Die Knappheit', body: 'Wer Modelle bauen kann, wird zur seltensten Ressource der Branche.' },
+    { date: '2026', title: 'Der Preis wird sichtbar', body: 'Die Summen, die zur Bindung dieser Menschen genannt werden, sprengen die Vorstellung.' },
+  ]}
+/>
+
+<ImageReveal
+  variant="orbit"
+  caption="ABB. 04 — Ein System ordnet sich um einen einzigen Punkt. Generierte Illustration."
+/>
+
+Am Ende steht keine Verschwörung, sondern eine Bewertung. Wir haben uns darauf
+geeinigt, dass die Kontrolle über ein Muster mehr wert ist als die Arbeit, aus der das
+Muster entsteht. Achtzehn Milliarden sind dann nicht die Ausnahme — sie sind der Preis,
+den diese Einigung sichtbar macht.

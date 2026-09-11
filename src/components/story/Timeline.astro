@@ -1,0 +1,75 @@
+---
+export interface TimelineItem {
+  date: string;
+  title: string;
+  body?: string;
+}
+export interface Props {
+  items: TimelineItem[];
+  label?: string;
+}
+const { items, label = 'CHRONOLOGIE' } = Astro.props;
+---
+
+<section class="bleed-wide timeline" data-reveal>
+  <span class="mono timeline__label">{label}</span>
+  <ol class="timeline__list">
+    {
+      items.map((item, i) => (
+        <li class="timeline__item">
+          <span class="mono timeline__index">{String(i + 1).padStart(2, '0')}</span>
+          <span class="mono timeline__date">{item.date}</span>
+          <div class="timeline__content">
+            <h3 class="timeline__title">{item.title}</h3>
+            {item.body && <p class="timeline__body">{item.body}</p>}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .timeline {
+    margin-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .timeline__label {
+    color: var(--c-accent);
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+  .timeline__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--c-line);
+  }
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 2.5rem auto;
+    gap: 0.25rem 1.2rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+  @media (min-width: 45rem) {
+    .timeline__item {
+      grid-template-columns: 3rem 8rem 1fr;
+      align-items: baseline;
+    }
+  }
+  .timeline__index {
+    color: var(--c-ink-faint);
+  }
+  .timeline__date {
+    color: var(--c-amber);
+  }
+  .timeline__title {
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.6rem);
+    margin: 0;
+  }
+  .timeline__body {
+    margin: 0.4rem 0 0;
+    color: var(--c-ink-dim);
+    font-size: 0.98rem;
+  }
+</style>

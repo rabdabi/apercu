@@ -1,0 +1,48 @@
+---
+import PlaceholderVisual from './PlaceholderVisual.astro';
+
+/** Reveals a visual with a clip-path wipe as it enters the viewport. */
+export interface Props {
+  variant?: 'grid' | 'orbit' | 'bars' | 'wave';
+  caption?: string;
+  src?: string;
+  alt?: string;
+}
+const { variant = 'grid', caption, src, alt } = Astro.props;
+---
+
+<figure class="bleed-wide reveal" data-reveal>
+  <div class="reveal__mask">
+    {
+      src ? (
+        <img src={src} alt={alt ?? ''} loading="lazy" decoding="async" />
+      ) : (
+        <PlaceholderVisual variant={variant} />
+      )
+    }
+  </div>
+  {caption && <figcaption class="mono reveal__cap">{caption}</figcaption>}
+</figure>
+
+<style>
+  .reveal {
+    margin-block: clamp(2rem, 5vw, 4rem);
+  }
+  .reveal__mask {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.9s var(--ease-out);
+  }
+  .reveal.is-revealed .reveal__mask {
+    clip-path: inset(0 0 0 0);
+  }
+  .reveal__cap {
+    margin-top: 0.7rem;
+    color: var(--c-ink-faint);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal__mask {
+      clip-path: none;
+      transition: none;
+    }
+  }
+</style>

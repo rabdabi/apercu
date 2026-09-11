@@ -1,0 +1,59 @@
+---
+import PlaceholderVisual from './PlaceholderVisual.astro';
+
+export interface Props {
+  variant?: 'grid' | 'orbit' | 'bars' | 'wave';
+  caption?: string;
+  /** Optional real image src; falls back to a generated visual. */
+  src?: string;
+  alt?: string;
+}
+const { variant = 'grid', caption, src, alt } = Astro.props;
+---
+
+<figure class="bleed-full fullbleed" data-reveal>
+  <div class="fullbleed__media">
+    {
+      src ? (
+        <img src={src} alt={alt ?? ''} loading="lazy" decoding="async" />
+      ) : (
+        <PlaceholderVisual variant={variant} />
+      )
+    }
+  </div>
+  {
+    caption && (
+      <figcaption class="grid-editorial fullbleed__cap">
+        <span class="mono">{caption}</span>
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .fullbleed {
+    margin: 0;
+    margin-block: clamp(2.5rem, 6vw, 5rem);
+  }
+  .fullbleed__media {
+    height: clamp(20rem, 70vh, 46rem);
+    overflow: hidden;
+  }
+  .fullbleed__media :global(svg),
+  .fullbleed__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+  }
+  .fullbleed__media :global(.pv) {
+    height: 100%;
+  }
+  .fullbleed__cap {
+    margin-top: 0.8rem;
+  }
+  .fullbleed__cap span {
+    grid-column: 2 / -2;
+    color: var(--c-ink-faint);
+  }
+</style>

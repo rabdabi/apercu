@@ -1,0 +1,77 @@
+---
+import { formatDate } from '@/lib/format';
+
+export interface Props {
+  title?: string;
+  authors?: string[];
+  publishedAt: Date;
+  updatedAt?: Date;
+}
+const { title = 'Ende', authors = [], publishedAt, updatedAt } = Astro.props;
+---
+
+<footer class="bleed-wide outro" data-reveal>
+  <span class="mono outro__mark">[ ENDE ]</span>
+  <h2 class="outro__title">{title}</h2>
+
+  <dl class="outro__meta">
+    {
+      authors.length > 0 && (
+        <div>
+          <dt class="mono">Autor:in</dt>
+          <dd>{authors.join(' · ')}</dd>
+        </div>
+      )
+    }
+    <div>
+      <dt class="mono">Veröffentlicht</dt>
+      <dd>{formatDate(publishedAt)}</dd>
+    </div>
+    {
+      updatedAt && (
+        <div>
+          <dt class="mono">Aktualisiert</dt>
+          <dd>{formatDate(updatedAt)}</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  <a href="/stories" class="outro__back mono">← Alle Geschichten</a>
+</footer>
+
+<style>
+  .outro {
+    margin-top: clamp(4rem, 10vw, 8rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--c-line-strong);
+  }
+  .outro__mark {
+    color: var(--c-accent);
+  }
+  .outro__title {
+    font-size: clamp(2.5rem, 1.5rem + 6vw, 6rem);
+    margin-block: 0.5rem 2rem;
+  }
+  .outro__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin: 0 0 2rem;
+  }
+  .outro__meta dt {
+    color: var(--c-ink-faint);
+    margin-bottom: 0.3rem;
+  }
+  .outro__meta dd {
+    margin: 0;
+    color: var(--c-ink);
+  }
+  .outro__back {
+    color: var(--c-ink-dim);
+    transition: color 0.2s var(--ease-out);
+  }
+  .outro__back:hover {
+    color: var(--c-accent);
+  }
+</style>

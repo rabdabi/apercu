@@ -1,0 +1,78 @@
+---
+import PlaceholderVisual from './PlaceholderVisual.astro';
+
+/**
+ * Sticky storytelling section: a visual pins to the viewport while narration
+ * steps scroll past. Degrades gracefully on small screens (visual un-pins and
+ * sits above the text). Pure CSS position:sticky — no scroll-jacking.
+ */
+export interface Props {
+  variant?: 'grid' | 'orbit' | 'bars' | 'wave';
+  label?: string;
+}
+const { variant = 'orbit', label = 'SEQUENZ' } = Astro.props;
+---
+
+<section class="bleed-full sticky">
+  <div class="grid-editorial sticky__grid">
+    <div class="sticky__visual-wrap">
+      <div class="sticky__visual">
+        <span class="mono sticky__label">{label}</span>
+        <PlaceholderVisual variant={variant} />
+      </div>
+    </div>
+    <div class="sticky__steps">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .sticky {
+    margin-block: clamp(3rem, 8vw, 6rem);
+    background: var(--c-ground-sunken);
+    border-block: 1px solid var(--c-line);
+    padding-block: clamp(2rem, 5vw, 4rem);
+  }
+  .sticky__grid {
+    row-gap: 2rem;
+  }
+  .sticky__visual-wrap {
+    grid-column: 1 / -1;
+  }
+  .sticky__steps {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: clamp(3rem, 15vh, 9rem);
+  }
+  @media (min-width: 55rem) {
+    .sticky__visual-wrap {
+      grid-column: 1 / 7;
+    }
+    .sticky__steps {
+      grid-column: 8 / -1;
+      padding-block: 20vh;
+    }
+    .sticky__visual {
+      position: sticky;
+      top: 12vh;
+    }
+  }
+  .sticky__label {
+    display: block;
+    color: var(--c-accent);
+    margin-bottom: 1rem;
+  }
+  .sticky__steps :global(.sticky-step) {
+    padding-left: 1rem;
+    border-left: 2px solid var(--c-line-strong);
+  }
+  .sticky__steps :global(.sticky-step h3) {
+    font-size: clamp(1.4rem, 1.1rem + 1.5vw, 2.2rem);
+    margin: 0 0 0.6rem;
+  }
+  .sticky__steps :global(.sticky-step p) {
+    margin: 0;
+    color: var(--c-ink-dim);
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+/**
+ * Inline source annotation. `id` produces a terminal-style marker (SOURCE_01)
+ * that can be referenced from the text; `href` links out when a real citation
+ * exists. Left empty, it renders a clearly-marked open slot for later sourcing.
+ */
+export interface Props {
+  id: string; // e.g. "01"
+  href?: string;
+  publisher?: string;
+}
+const { id, href, publisher } = Astro.props;
+const marker = `SOURCE_${id}`;
+---
+
+<aside class="source" id={`source-${id}`} data-reveal>
+  <span class="mono source__marker">{marker}</span>
+  <p class="source__body">
+    {href ? (
+      <a href={href} rel="nofollow noopener" target="_blank">
+        <slot />
+        {publisher && <span class="source__pub"> — {publisher}</span>}
+      </a>
+    ) : (
+      <span>
+        <slot />
+        <span class="mono source__todo"> [ QUELLE FOLGT ]</span>
+      </span>
+    )}
+  </p>
+</aside>
+
+<style>
+  .source {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem;
+    align-items: baseline;
+    margin-block: 0.9rem;
+    padding: 0.7rem 0;
+    border-top: 1px dashed var(--c-line-strong);
+    font-size: 0.9rem;
+  }
+  .source__marker {
+    color: var(--c-amber);
+    font-size: 0.65rem;
+  }
+  .source__body {
+    margin: 0;
+    color: var(--c-ink-dim);
+  }
+  .source__pub {
+    color: var(--c-ink-faint);
+  }
+  .source__todo {
+    color: var(--c-red);
+    font-size: 0.6rem;
+  }
+</style>

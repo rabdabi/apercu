@@ -1,0 +1,118 @@
+---
+/**
+ * Deterministic geometric composition rendered as inline SVG. Serves as an
+ * editorial placeholder that can later be swapped for photography. Variants are
+ * Swiss/constructivist in spirit — grids, orbits, bars, signal waves.
+ */
+export interface Props {
+  variant?: 'grid' | 'orbit' | 'bars' | 'wave';
+  label?: string;
+  class?: string;
+}
+const { variant = 'grid', label, class: className = '' } = Astro.props;
+const uid = Math.random().toString(36).slice(2, 8);
+---
+
+<figure class:list={['pv', className]} data-variant={variant} aria-hidden={label ? undefined : 'true'}>
+  <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label={label}>
+    <rect width="160" height="100" fill="var(--c-ground-sunken)"></rect>
+
+    {
+      variant === 'grid' && (
+        <g stroke="var(--c-line-strong)" stroke-width="0.4">
+          {Array.from({ length: 17 }).map((_, i) => (
+            <line x1={i * 10} y1="0" x2={i * 10} y2="100" />
+          ))}
+          {Array.from({ length: 11 }).map((_, i) => (
+            <line x1="0" y1={i * 10} x2="160" y2={i * 10} />
+          ))}
+          <rect x="40" y="20" width="60" height="40" fill="var(--c-accent)" opacity="0.9" />
+          <circle cx="120" cy="70" r="14" fill="none" stroke="var(--c-amber)" stroke-width="1.2" />
+        </g>
+      )
+    }
+
+    {
+      variant === 'orbit' && (
+        <g fill="none" stroke-width="0.6">
+          {[12, 24, 36, 48].map((r) => (
+            <circle cx="80" cy="50" r={r} stroke="var(--c-line-strong)" />
+          ))}
+          <circle cx="80" cy="50" r="4" fill="var(--c-accent)" stroke="none" />
+          <circle cx="80" cy="14" r="2.5" fill="var(--c-amber)" stroke="none" />
+          <circle cx="116" cy="50" r="2" fill="var(--c-ink)" stroke="none" />
+          <line x1="80" y1="50" x2="80" y2="14" stroke="var(--c-accent)" stroke-width="0.4" />
+        </g>
+      )
+    }
+
+    {
+      variant === 'bars' && (
+        <g>
+          {[18, 34, 26, 52, 40, 68, 58, 82, 46].map((h, i) => (
+            <rect
+              x={12 + i * 16}
+              y={92 - h}
+              width="9"
+              height={h}
+              fill={i % 3 === 0 ? 'var(--c-accent)' : 'var(--c-line-strong)'}
+            />
+          ))}
+          <line x1="6" y1="92" x2="154" y2="92" stroke="var(--c-ink-faint)" stroke-width="0.5" />
+        </g>
+      )
+    }
+
+    {
+      variant === 'wave' && (
+        <g fill="none">
+          <path
+            d="M0 60 Q 20 30 40 60 T 80 60 T 120 60 T 160 60"
+            stroke="var(--c-accent)"
+            stroke-width="1.2"
+          />
+          <path
+            d="M0 70 Q 20 50 40 70 T 80 70 T 120 70 T 160 70"
+            stroke="var(--c-line-strong)"
+            stroke-width="0.8"
+          />
+          <path
+            d={`M0 40 ${Array.from({ length: 32 })
+              .map((_, i) => `L ${i * 5} ${40 + (Math.sin(i * 0.9) * 6 + (i % 4) * 1.5)}`)
+              .join(' ')}`}
+            stroke="var(--c-amber)"
+            stroke-width="0.6"
+            opacity="0.8"
+          />
+        </g>
+      )
+    }
+
+    <text
+      x="6"
+      y="12"
+      font-family="'Space Mono', monospace"
+      font-size="4"
+      letter-spacing="0.5"
+      fill="var(--c-ink-faint)">FIG / {uid.toUpperCase()}</text>
+  </svg>
+  {label && <figcaption class="mono pv__cap">{label}</figcaption>}
+</figure>
+
+<style>
+  .pv {
+    margin: 0;
+    width: 100%;
+  }
+  .pv svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--c-line);
+  }
+  .pv__cap {
+    margin-top: 0.6rem;
+    color: var(--c-ink-faint);
+  }
+</style>

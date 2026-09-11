@@ -1,0 +1,30 @@
+---
+import { render } from 'astro:content';
+import StoryLayout from '@/layouts/StoryLayout.astro';
+import { getPublishedStories, estimateReadingMinutes, type Story } from '@/lib/stories';
+import { pad } from '@/lib/format';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const stories = await getPublishedStories();
+  return stories.map((story) => ({
+    params: { slug: story.id.replace(/\/index$/, '') },
+    props: { story },
+  }));
+}
+
+interface Props {
+  story: Story;
+}
+const { story } = Astro.props as Props;
+const { Content } = await render(story);
+
+const readingMinutes = estimateReadingMinutes(story.body, story.data.readingMinutes);
+const topic = (story.data.topics[0] ?? 'Reportage').toUpperCase();
+const kicker = `${pad(1)} / ${topic}`;
+---
+
+<StoryLayout story={story} readingMinutes={readingMinutes} kicker={kicker}>
+  <Content />
+</StoryLayout>

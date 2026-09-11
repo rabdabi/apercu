@@ -1,0 +1,138 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContactForm from '@/components/interactive/ContactForm.astro';
+---
+
+<BaseLayout
+  title="Über"
+  description="Über Aperçu — eine redaktionelle Plattform für Langform-Journalismus über Technologie und Gesellschaft."
+>
+  <section class="grid-editorial head">
+    <p class="mono head__kicker">MANIFEST / ÜBER</p>
+    <h1 class="head__title">Aperçu ist<br />ein langer Blick.</h1>
+  </section>
+
+  <section class="grid-editorial manifest" aria-label="Manifest">
+    <div class="manifest__col">
+      <p class="manifest__lead">
+        Aperçu ist eine redaktionelle Plattform für Geschichten, die Zeit brauchen.
+        Wir schreiben über Technologie, Arbeit und die Systeme, die im Hintergrund
+        Entscheidungen treffen — und über die Menschen, die davon betroffen sind.
+      </p>
+      <p>
+        Wir glauben, dass die wichtigsten Veränderungen selten als Ereignis auftreten,
+        sondern als langsame Verschiebung. Deshalb bauen wir eine Umgebung, in der eine
+        Geschichte atmen darf: mit grossen Bildern, klaren Zahlen und Raum zum Lesen.
+      </p>
+      <p>
+        Diese Seite ist die erste Ausgabe des Systems. Die veröffentlichte
+        Beispielgeschichte trägt bewusst gekennzeichnete <strong>illustrative Daten</strong>;
+        recherchierte Quellen folgen an den dafür vorgesehenen Stellen.
+      </p>
+
+      <dl class="manifest__facts">
+        <div>
+          <dt class="mono">Herausgeberin</dt>
+          <dd>Apercu association</dd>
+        </div>
+        <div>
+          <dt class="mono">Sitz</dt>
+          <dd>Zürich, Schweiz</dd>
+        </div>
+        <div>
+          <dt class="mono">Sprache</dt>
+          <dd>Deutsch (weitere in Vorbereitung)</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="grid-editorial contact" aria-labelledby="contact-title">
+    <div class="contact__col">
+      <p class="mono contact__kicker">KONTAKT / 01</p>
+      <h2 id="contact-title" class="contact__title">Schreib uns</h2>
+      <p class="contact__blurb">
+        Hinweise, Recherche-Tipps oder Kritik — wir lesen alles.
+      </p>
+      <ContactForm />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 8vw, 5rem) clamp(1.5rem, 4vw, 2.5rem);
+    row-gap: 1rem;
+  }
+  .head__kicker {
+    grid-column: 1 / -1;
+    color: var(--c-accent);
+  }
+  .head__title {
+    grid-column: 1 / -1;
+    font-size: clamp(2.8rem, 1.5rem + 8vw, 8rem);
+    line-height: 0.92;
+  }
+  .manifest {
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+  }
+  .manifest__col {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 1.4rem;
+  }
+  @media (min-width: 60rem) {
+    .manifest__col {
+      grid-column: 3 / 10;
+    }
+  }
+  .manifest__col p {
+    color: var(--c-ink);
+    max-width: 60ch;
+  }
+  .manifest__lead {
+    font-size: clamp(1.3rem, 1.1rem + 1vw, 1.9rem);
+    line-height: 1.35;
+    color: var(--c-ink) !important;
+  }
+  .manifest__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin: 1.5rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--c-line);
+  }
+  .manifest__facts dt {
+    color: var(--c-ink-faint);
+    margin-bottom: 0.3rem;
+  }
+  .manifest__facts dd {
+    margin: 0;
+  }
+  .contact {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    border-top: 1px solid var(--c-line);
+    margin-top: 2rem;
+  }
+  .contact__col {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 60rem) {
+    .contact__col {
+      grid-column: 3 / 11;
+    }
+  }
+  .contact__kicker {
+    color: var(--c-accent);
+  }
+  .contact__title {
+    font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+    margin-block: 0.6rem 0.8rem;
+  }
+  .contact__blurb {
+    color: var(--c-ink-dim);
+    margin-bottom: 2rem;
+    max-width: 40ch;
+  }
+</style>

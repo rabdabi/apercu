@@ -1,0 +1,69 @@
+---
+/** Fixed reading-progress bar with a terminal-style percentage readout. */
+---
+
+<div class="progress" role="progressbar" aria-label="Lesefortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-progress>
+  <div class="progress__bar" data-progress-bar></div>
+  <span class="mono progress__pct" data-progress-pct aria-hidden="true">000%</span>
+</div>
+
+<style>
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 45;
+    height: 2px;
+    background: transparent;
+  }
+  .progress__bar {
+    height: 100%;
+    width: 0;
+    background: var(--c-accent);
+    transform-origin: left;
+  }
+  .progress__pct {
+    position: fixed;
+    top: 0.6rem;
+    right: 0.9rem;
+    font-size: 0.6rem;
+    color: var(--c-ink-faint);
+    background: color-mix(in oklab, var(--c-ground) 70%, transparent);
+    padding: 0.1rem 0.35rem;
+  }
+  @media (max-width: 48rem) {
+    .progress__pct {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-progress]');
+  const bar = document.querySelector<HTMLElement>('[data-progress-bar]');
+  const pct = document.querySelector<HTMLElement>('[data-progress-pct]');
+
+  if (root && bar && pct) {
+    let ticking = false;
+    const update = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const fraction = scrollable > 0 ? window.scrollY / scrollable : 0;
+      const clamped = Math.max(0, Math.min(1, fraction));
+      bar.style.width = `${clamped * 100}%`;
+      const p = Math.round(clamped * 100);
+      pct.textContent = `${String(p).padStart(3, '0')}%`;
+      root.setAttribute('aria-valuenow', String(p));
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+</script>

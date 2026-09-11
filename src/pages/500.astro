@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+// Rendered by the Node server for uncaught errors. Keep it self-contained and
+// dependency-light so it renders even when something upstream failed.
+---
+
+<BaseLayout title="500 — Serverfehler" description="Ein interner Fehler ist aufgetreten." noindex bare>
+  <section class="grid-editorial err" aria-labelledby="err-title">
+    <p class="mono err__code">FEHLER / 500</p>
+    <h1 id="err-title" class="err__title">500</h1>
+    <p class="err__lead">
+      Etwas ist auf unserer Seite schiefgelaufen. Der Fehler wurde protokolliert.
+      Bitte versuche es in einem Moment erneut.
+    </p>
+    <nav class="err__links mono" aria-label="Weiterführende Links">
+      <a href="/">→ Startseite</a>
+      <a href="/stories">→ Geschichten</a>
+    </nav>
+  </section>
+</BaseLayout>
+
+<style>
+  .err {
+    min-height: 70vh;
+    align-content: center;
+    padding-block: 4rem;
+    row-gap: 1.2rem;
+  }
+  .err__code {
+    grid-column: 1 / -1;
+    color: var(--c-red);
+  }
+  .err__title {
+    grid-column: 1 / -1;
+    font-size: clamp(6rem, 30vw, 22rem);
+    line-height: 0.8;
+    color: var(--c-red);
+  }
+  .err__lead {
+    grid-column: 1 / -1;
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.8rem);
+    color: var(--c-ink-dim);
+    max-width: 40ch;
+  }
+  .err__links {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .err__links a {
+    color: var(--c-ink);
+  }
+  .err__links a:hover {
+    color: var(--c-accent);
+  }
+</style>

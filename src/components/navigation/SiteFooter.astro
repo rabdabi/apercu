@@ -1,0 +1,117 @@
+---
+import NewsletterForm from '@/components/interactive/NewsletterForm.astro';
+import { formatDateShort } from '@/lib/format';
+
+const year = new Date().getFullYear();
+const build = formatDateShort(new Date());
+---
+
+<footer class="footer">
+  <div class="grid-editorial footer__grid">
+    <div class="footer__cta">
+      <p class="mono mono--signal">NEWSLETTER / 01</p>
+      <h2 class="footer__title">Aperçu-Post</h2>
+      <p class="footer__blurb">
+        Neue Recherchen, unregelmässig. Keine Werbung, kein Weiterverkauf deiner Adresse.
+      </p>
+      <NewsletterForm />
+    </div>
+
+    <nav class="footer__nav" aria-label="Fusszeile">
+      <p class="mono">Navigation</p>
+      <ul>
+        <li><a href="/stories">Geschichten</a></li>
+        <li><a href="/index">Index</a></li>
+        <li><a href="/about">Über</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__meta">
+      <p class="mono">Kolophon</p>
+      <p>
+        Aperçu ist eine redaktionelle Plattform für Langform-Journalismus über Technologie,
+        Gesellschaft und die Systeme dazwischen.
+      </p>
+      <p class="mono footer__build">BUILD / {build} · STATUS / PUBLISHED</p>
+    </div>
+  </div>
+
+  <div class="grid-editorial footer__base">
+    <p class="mono footer__copy">© {year} Apercu association</p>
+    <p class="mono">Zürich / Schweiz</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: 8rem;
+    border-top: 1px solid var(--c-line);
+    background: var(--c-ground-raised);
+    padding-block: 4rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .footer__grid {
+    row-gap: 3rem;
+    align-items: start;
+  }
+  .footer__cta {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 60rem) {
+    .footer__cta {
+      grid-column: 1 / 6;
+    }
+    .footer__nav {
+      grid-column: 7 / 9;
+    }
+    .footer__meta {
+      grid-column: 9 / -1;
+    }
+  }
+  .footer__title {
+    font-size: clamp(2rem, 1.2rem + 3vw, 3.2rem);
+    margin-block: 0.6rem 0.8rem;
+  }
+  .footer__blurb {
+    color: var(--c-ink-dim);
+    max-width: 42ch;
+    margin-bottom: 1.5rem;
+  }
+  .footer__nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.8rem 0 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .footer__nav a {
+    color: var(--c-ink-dim);
+    transition: color 0.2s var(--ease-out);
+  }
+  .footer__nav a:hover {
+    color: var(--c-accent);
+  }
+  .footer__meta p:not(.mono) {
+    color: var(--c-ink-dim);
+    margin-block: 0.8rem;
+    max-width: 40ch;
+  }
+  .footer__build {
+    margin-top: 1.2rem;
+  }
+  .footer__base {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--c-line);
+    justify-content: space-between;
+  }
+  .footer__copy {
+    grid-column: 1 / 7;
+  }
+  .footer__base p:last-child {
+    grid-column: 7 / -1;
+    text-align: right;
+  }
+</style>

@@ -1,0 +1,142 @@
+---
+/**
+ * Newsletter form. Works without JavaScript (native POST to /api/newsletter,
+ * which returns JSON). With JS, submission is intercepted for inline feedback.
+ * The `website` field is a honeypot: visually hidden, aria-hidden, off-tab.
+ */
+---
+
+<form class="nl" action="/api/newsletter" method="post" data-newsletter novalidate>
+  <label class="sr-only" for="nl-email">E-Mail-Adresse</label>
+  <div class="nl__row">
+    <input
+      id="nl-email"
+      name="email"
+      type="email"
+      inputmode="email"
+      autocomplete="email"
+      required
+      maxlength="254"
+      placeholder="deine@e-mail.ch"
+      class="nl__input"
+    />
+    <button type="submit" class="nl__submit mono" data-submit>Abonnieren</button>
+  </div>
+
+  <!-- honeypot -->
+  <div class="nl__hp" aria-hidden="true">
+    <label>Website<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <p class="nl__status mono" role="status" aria-live="polite" data-status></p>
+</form>
+
+<style>
+  .nl__row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--c-line-strong);
+  }
+  .nl__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.85rem 1rem;
+    background: var(--c-ground-sunken);
+    border: 0;
+    color: var(--c-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+  }
+  .nl__input::placeholder {
+    color: var(--c-ink-faint);
+  }
+  .nl__input:focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: -2px;
+  }
+  .nl__submit {
+    padding: 0.85rem 1.4rem;
+    background: var(--c-accent);
+    color: #14140f;
+    border: 0;
+    cursor: pointer;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: filter 0.2s var(--ease-out);
+  }
+  .nl__submit:hover {
+    filter: brightness(1.08);
+  }
+  .nl__submit[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .nl__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .nl__status {
+    margin-top: 0.7rem;
+    min-height: 1.2em;
+  }
+  .nl__status[data-state='ok'] {
+    color: var(--c-accent);
+  }
+  .nl__status[data-state='error'] {
+    color: var(--c-red);
+  }
+  .nl__status[data-state='dev'] {
+    color: var(--c-amber);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-newsletter]');
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      status.dataset.state = '';
+      status.textContent = 'Wird gesendet …';
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const data = (await res.json()) as {
+          ok?: boolean;
+          persisted?: boolean;
+          message?: string;
+          error?: string;
+        };
+
+        if (res.ok && data.ok) {
+          form.reset();
+          if (data.persisted === false) {
+            status.dataset.state = 'dev';
+            status.textContent = 'DEV-MODUS — nicht gespeichert (keine Datenbank konfiguriert).';
+          } else {
+            status.dataset.state = 'ok';
+            status.textContent = 'Danke — Adresse vorgemerkt.';
+          }
+        } else {
+          status.dataset.state = 'error';
+          status.textContent = data.error ?? 'Etwas ist schiefgelaufen.';
+        }
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent = 'Netzwerkfehler. Bitte später erneut versuchen.';
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+</script>

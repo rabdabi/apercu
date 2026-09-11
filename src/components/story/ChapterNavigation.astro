@@ -1,0 +1,102 @@
+---
+/**
+ * Chapter rail. Auto-built at runtime from the ChapterIntro anchors already in
+ * the document, so it never falls out of sync with the story and needs no
+ * duplicated data. Hidden when JS is unavailable (chapters remain reachable by
+ * scrolling); shown only on wide viewports where the rail has room.
+ */
+---
+
+<nav class="chapter-nav" aria-label="Kapitel" data-chapter-nav hidden>
+  <span class="mono chapter-nav__title">Kapitel</span>
+  <ol class="chapter-nav__list" data-chapter-list></ol>
+</nav>
+
+<style>
+  .chapter-nav {
+    display: none;
+  }
+  @media (min-width: 75rem) {
+    .chapter-nav {
+      display: block;
+      position: fixed;
+      top: 40vh;
+      left: 1.5rem;
+      z-index: 30;
+      max-width: 12rem;
+    }
+  }
+  .chapter-nav__title {
+    color: var(--c-ink-faint);
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+  .chapter-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .chapter-nav :global(a) {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: var(--c-ink-faint);
+    display: flex;
+    gap: 0.5rem;
+    transition: color 0.2s var(--ease-out);
+  }
+  .chapter-nav :global(a:hover),
+  .chapter-nav :global(a[data-active='true']) {
+    color: var(--c-accent);
+  }
+  .chapter-nav :global(a[data-active='true'] .dot) {
+    background: var(--c-accent);
+  }
+  .chapter-nav :global(.dot) {
+    width: 6px;
+    height: 6px;
+    margin-top: 0.35em;
+    flex: none;
+    background: var(--c-line-strong);
+    border-radius: 1px;
+  }
+</style>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-chapter-nav]');
+  const list = document.querySelector<HTMLOListElement>('[data-chapter-list]');
+  const chapters = Array.from(document.querySelectorAll<HTMLElement>('[id^="kapitel-"]'));
+
+  if (nav && list && chapters.length > 0) {
+    for (const ch of chapters) {
+      const title = ch.querySelector('h2')?.textContent?.trim() ?? ch.id;
+      const num = ch.id.replace('kapitel-', '');
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${ch.id}`;
+      a.dataset.target = ch.id;
+      a.innerHTML = `<span class="dot" aria-hidden="true"></span><span>${num} · ${title}</span>`;
+      li.appendChild(a);
+      list.appendChild(li);
+    }
+    nav.hidden = false;
+
+    const links = new Map(
+      Array.from(list.querySelectorAll<HTMLAnchorElement>('a')).map((a) => [a.dataset.target!, a]),
+    );
+    const spy = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            links.forEach((a) => (a.dataset.active = 'false'));
+            links.get(entry.target.id)?.setAttribute('data-active', 'true');
+          }
+        }
+      },
+      { rootMargin: '-30% 0px -60% 0px' },
+    );
+    chapters.forEach((ch) => spy.observe(ch));
+  }
+</script>

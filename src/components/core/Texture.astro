@@ -1,0 +1,81 @@
+---
+/**
+ * Optional, very subtle texture layer: SVG film grain + faint corner
+ * registration marks. Purely decorative (aria-hidden), fixed, pointer-events
+ * none. Generated inline — no raster texture downloads.
+ */
+---
+
+<div class="texture" aria-hidden="true">
+  <svg class="texture__grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="apercu-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#apercu-grain)" />
+  </svg>
+
+  <!-- Editorial registration marks in the corners -->
+  <span class="reg reg--tl"></span>
+  <span class="reg reg--tr"></span>
+  <span class="reg reg--bl"></span>
+  <span class="reg reg--br"></span>
+</div>
+
+<style>
+  .texture {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .texture__grain {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+  }
+  .reg {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    opacity: 0.35;
+  }
+  .reg::before,
+  .reg::after {
+    content: '';
+    position: absolute;
+    background: var(--c-ink-faint);
+  }
+  .reg::before {
+    inset: 5px 0;
+    width: 1px;
+  }
+  .reg::after {
+    inset: 0 5px;
+    height: 1px;
+  }
+  .reg--tl {
+    top: 14px;
+    left: 14px;
+  }
+  .reg--tr {
+    top: 14px;
+    right: 14px;
+  }
+  .reg--bl {
+    bottom: 14px;
+    left: 14px;
+  }
+  .reg--br {
+    bottom: 14px;
+    right: 14px;
+  }
+  @media (max-width: 48rem) {
+    .reg {
+      display: none;
+    }
+  }
+</style>

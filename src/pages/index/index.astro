@@ -1,0 +1,163 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getPublishedStories, getTopics, estimateReadingMinutes } from '@/lib/stories';
+import { formatDateShort, readingClock, pad } from '@/lib/format';
+
+export const prerender = true;
+
+const stories = await getPublishedStories();
+const topics = await getTopics();
+const slugOf = (id: string) => id.replace(/\/index$/, '');
+---
+
+<BaseLayout
+  title="Index"
+  description="Das vollständige Register aller Aperçu-Geschichten — chronologisch, mit Metadaten."
+>
+  <section class="grid-editorial head">
+    <p class="mono head__kicker">REGISTER / 0001</p>
+    <h1 class="head__title">Index</h1>
+    <p class="head__lead mono">STATUS / PUBLISHED · EINTRÄGE / {pad(stories.length, 4)}</p>
+  </section>
+
+  <section class="grid-editorial register" aria-label="Register">
+    <div class="register__wrap">
+      <table class="register__table">
+        <thead>
+          <tr>
+            <th scope="col" class="mono">Nr.</th>
+            <th scope="col" class="mono">Titel</th>
+            <th scope="col" class="mono register__hide-sm">Thema</th>
+            <th scope="col" class="mono register__hide-sm">Lesezeit</th>
+            <th scope="col" class="mono">Datum</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            stories.map((s, i) => (
+              <tr>
+                <td class="mono register__num">{pad(i + 1, 4)}</td>
+                <th scope="row" class="register__title">
+                  <a href={`/stories/${slugOf(s.id)}`}>{s.data.title}</a>
+                </th>
+                <td class="mono register__hide-sm">
+                  {s.data.topics[0]?.toUpperCase() ?? '—'}
+                </td>
+                <td class="mono register__hide-sm">
+                  {readingClock(estimateReadingMinutes(s.body, s.data.readingMinutes))}
+                </td>
+                <td class="mono">{formatDateShort(s.data.publishedAt)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {
+    topics.length > 0 && (
+      <section class="grid-editorial register-topics">
+        <p class="mono register-topics__label">Themen im Register</p>
+        <ul class="register-topics__list">
+          {topics.map((t) => (
+            <li class="mono">
+              {t.topic.toUpperCase()} <span class="register-topics__count">/ {pad(t.count, 2)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 8vw, 5rem) clamp(1rem, 3vw, 2rem);
+    row-gap: 0.8rem;
+  }
+  .head__kicker {
+    grid-column: 1 / -1;
+    color: var(--c-accent);
+  }
+  .head__title {
+    grid-column: 1 / -1;
+    font-size: clamp(3rem, 1.5rem + 10vw, 10rem);
+    line-height: 0.9;
+  }
+  .head__lead {
+    grid-column: 1 / -1;
+    color: var(--c-ink-faint);
+  }
+  .register {
+    padding-bottom: 3rem;
+  }
+  .register__wrap {
+    grid-column: 1 / -1;
+    overflow-x: auto;
+  }
+  .register__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+  .register__table th,
+  .register__table td {
+    text-align: left;
+    padding: 1rem 1rem 1rem 0;
+    border-bottom: 1px solid var(--c-line);
+    vertical-align: baseline;
+  }
+  .register__table thead th {
+    color: var(--c-ink-faint);
+    border-bottom: 1px solid var(--c-line-strong);
+    font-weight: 400;
+  }
+  .register__num {
+    color: var(--c-ink-faint);
+    white-space: nowrap;
+  }
+  .register__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 1rem + 0.8vw, 1.6rem);
+    letter-spacing: -0.01em;
+  }
+  .register__title a {
+    transition: color 0.2s var(--ease-out);
+  }
+  .register__title a:hover {
+    color: var(--c-accent);
+  }
+  .register__table td.mono,
+  .register__table td.register__num {
+    color: var(--c-ink-dim);
+  }
+  @media (max-width: 48rem) {
+    .register__hide-sm {
+      display: none;
+    }
+  }
+  .register-topics {
+    padding-block: 2rem 4rem;
+    border-top: 1px solid var(--c-line);
+    row-gap: 1rem;
+  }
+  .register-topics__label {
+    grid-column: 1 / -1;
+    color: var(--c-ink-faint);
+  }
+  .register-topics__list {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    color: var(--c-ink-dim);
+  }
+  .register-topics__count {
+    color: var(--c-ink-faint);
+  }
+</style>

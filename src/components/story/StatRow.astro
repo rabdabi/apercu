@@ -1,0 +1,33 @@
+---
+/** Lays 2–3 StatBlocks in a responsive row, breaking out to the wide column. */
+export interface Props {
+  label?: string;
+}
+const { label } = Astro.props;
+---
+
+<section class="bleed-wide statrow" data-reveal>
+  {label && <span class="mono statrow__label">{label}</span>}
+  <div class="statrow__grid"><slot /></div>
+</section>
+
+<style>
+  .statrow {
+    margin-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .statrow__label {
+    display: block;
+    color: var(--c-accent);
+    margin-bottom: 1.5rem;
+  }
+  .statrow__grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 45rem) {
+    .statrow__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

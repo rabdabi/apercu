@@ -1,0 +1,55 @@
+---
+import StatCounter from '@/components/interactive/StatCounter.tsx';
+
+export interface Props {
+  value: number;
+  label: string;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  source?: string; // e.g. "SOURCE_01"
+}
+const { value, label, prefix = '', suffix = '', decimals = 0, source } = Astro.props;
+---
+
+<div class="stat">
+  <span class="stat__value">
+    <StatCounter
+      client:visible
+      value={value}
+      prefix={prefix}
+      suffix={suffix}
+      decimals={decimals}
+    />
+  </span>
+  <span class="stat__label">{label}</span>
+  {source && <span class="mono stat__source">{source}</span>}
+</div>
+
+<style>
+  .stat {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--c-line-strong);
+  }
+  .stat__value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.8rem, 1.8rem + 5vw, 5.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--c-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat__label {
+    font-size: 1rem;
+    color: var(--c-ink-dim);
+    line-height: 1.35;
+    max-width: 30ch;
+  }
+  .stat__source {
+    color: var(--c-ink-faint);
+    font-size: 0.65rem;
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+# Kopiere diesen Ordner nach src/content/stories/<dein-slug>/index.mdx
+# Dateien/Ordner mit führendem "_" werden vom Loader ignoriert.
+title: 'Titel der Geschichte'
+subtitle: 'Ein erklärender Untertitel, der die Frage der Geschichte stellt.'
+description: 'Kurze Beschreibung für Suchmaschinen und Vorschaukarten (max. 200 Zeichen).'
+lang: 'de'
+publishedAt: 2026-01-01
+# updatedAt: 2026-01-15
+authors:
+  - 'Apercu association'
+topics:
+  - 'Technologie'
+featured: false
+draft: true
+illustrative: false
+# accent: '#c6f24e'      # optionaler Story-Akzent (CSS-Farbe)
+# readingMinutes: 8      # überschreibt die automatische Schätzung
+# heroImage: '/images/…' # optionales echtes Bild statt generierter Grafik
+# heroAlt: 'Alt-Text'
+---
+
+import {
+  ChapterIntro,
+  StoryText,
+  SideNote,
+  FullBleedMedia,
+  SplitStory,
+  StickyStory,
+  StickyStep,
+  PullQuote,
+  StatRow,
+  StatBlock,
+  Timeline,
+  ImageReveal,
+  SourceNote,
+} from '@/components/story';
+
+{/* Hero und Outro werden automatisch aus dem Frontmatter erzeugt. */}
+{/* Hier beginnt der Fliesstext. Standard-Absätze landen in der Lesespalte. */}
+
+<StoryText lead>
+Der einleitende Absatz (Standfirst) in grösserer Schrift.
+</StoryText>
+
+<ChapterIntro number={1} title="Erstes Kapitel" />
+
+Normaler Fliesstext. **Fett** und [Links](https://example.org) funktionieren wie erwartet.
+
+<PullQuote cite="Quelle">Ein prägnantes Zitat.</PullQuote>
+
+<StatRow label="Kennzahlen">
+  <StatBlock value={42} suffix="%" label="Beschreibung der Kennzahl" source="SOURCE_01" />
+</StatRow>
+
+<SourceNote id="01" href="https://example.org" publisher="Publikation">
+Quellenangabe.
+</SourceNote>

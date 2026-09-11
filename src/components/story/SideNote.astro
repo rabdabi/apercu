@@ -1,0 +1,32 @@
+---
+/** Editorial side note / marginalia. Renders as an aside beside the reading column. */
+export interface Props {
+  label?: string;
+}
+const { label = 'NOTIZ' } = Astro.props;
+---
+
+<aside class="sidenote" data-reveal>
+  <span class="mono sidenote__label">{label}</span>
+  <div class="sidenote__body"><slot /></div>
+</aside>
+
+<style>
+  .sidenote {
+    border-left: 2px solid var(--c-accent);
+    padding-left: 1rem;
+    margin-block: 1rem;
+  }
+  .sidenote__label {
+    color: var(--c-accent);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  .sidenote__body {
+    font-size: 0.95rem;
+    color: var(--c-ink-dim);
+  }
+  .sidenote__body :global(p) {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import { pad } from '@/lib/format';
+
+export interface Props {
+  number: number;
+  title: string;
+  id?: string;
+}
+const { number, title, id } = Astro.props;
+const anchor = id ?? `kapitel-${pad(number, 2)}`;
+---
+
+<div class="bleed-wide chapter" id={anchor} data-reveal>
+  <span class="mono chapter__mark">[ {pad(number)} ]</span>
+  <h2 class="chapter__title">{title}</h2>
+  <span class="chapter__rule" aria-hidden="true"></span>
+</div>
+
+<style>
+  .chapter {
+    margin-block: clamp(3rem, 8vw, 6rem) 1rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .chapter__mark {
+    color: var(--c-accent);
+    font-size: 0.8rem;
+  }
+  .chapter__title {
+    font-size: clamp(2.2rem, 1.4rem + 4vw, 4.5rem);
+    line-height: 0.98;
+    max-width: 18ch;
+  }
+  .chapter__rule {
+    height: 1px;
+    width: min(100%, 8rem);
+    background: var(--c-line-strong);
+    margin-top: 0.5rem;
+  }
+</style>

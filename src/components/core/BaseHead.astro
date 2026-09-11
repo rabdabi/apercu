@@ -1,0 +1,68 @@
+---
+import '@/styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  /** Absolute or root-relative OG image path. */
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  authors?: string[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  image = '/og-default.svg',
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  authors = [],
+  noindex = false,
+} = Astro.props;
+
+const SITE_NAME = 'Aperçu';
+const titleTemplate = title === SITE_NAME ? title : `${title} — ${SITE_NAME}`;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const imageUrl = new URL(image, Astro.site).href;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{titleTemplate}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta name="theme-color" content="#14140f" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+<!-- Open Graph -->
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={titleTemplate} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:locale" content="de_CH" />
+{type === 'article' && publishedTime && (
+  <meta property="article:published_time" content={publishedTime.toISOString()} />
+)}
+{type === 'article' && modifiedTime && (
+  <meta property="article:modified_time" content={modifiedTime.toISOString()} />
+)}
+{type === 'article' && authors.map((a) => <meta property="article:author" content={a} />)}
+
+<!-- Social card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={titleTemplate} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+<link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} — RSS`} href="/rss.xml" />

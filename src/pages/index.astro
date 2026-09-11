@@ -1,0 +1,354 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  getPublishedStories,
+  getFeaturedStory,
+  getTopics,
+  estimateReadingMinutes,
+} from '@/lib/stories';
+import { formatDate, readingClock, pad } from '@/lib/format';
+
+export const prerender = true;
+
+const stories = await getPublishedStories();
+const featured = await getFeaturedStory();
+const topics = await getTopics();
+const selected = stories.filter((s) => s.id !== featured?.id).slice(0, 6);
+
+const slugOf = (id: string) => id.replace(/\/index$/, '');
+const featuredMinutes = featured
+  ? estimateReadingMinutes(featured.body, featured.data.readingMinutes)
+  : 0;
+---
+
+<BaseLayout
+  title="Aperçu"
+  description="Aperçu — eine redaktionelle Plattform für Langform-Journalismus über Technologie, Gesellschaft und die Systeme dazwischen."
+>
+  <!-- ── Cinematic opening ─────────────────────────────────────────────── -->
+  <section class="opening" aria-label="Aperçu">
+    <div class="grid-editorial opening__grid">
+      <p class="mono opening__meta opening__meta--top">
+        AUSGABE / {pad(1)} · ZÜRICH · {formatDate(new Date())}
+      </p>
+      <h1 class="wordmark" aria-label="Aperçu">
+        <span class="wordmark__row">AP</span>
+        <span class="wordmark__row">ER</span>
+        <span class="wordmark__row wordmark__row--accent">ÇU</span>
+      </h1>
+      <p class="opening__tagline">Geschichten für den genaueren Blick.</p>
+      <p class="mono opening__meta opening__meta--bottom">
+        <span aria-hidden="true">↓</span> LANGFORM · TECHNOLOGIE · GESELLSCHAFT
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Featured story ────────────────────────────────────────────────── -->
+  {
+    featured && (
+      <section class="grid-editorial feature" aria-labelledby="feature-title" data-reveal>
+        <p class="mono feature__kicker">IM FOKUS / {pad(1)}</p>
+        <a class="feature__link" href={`/stories/${slugOf(featured.id)}`}>
+          <h2 id="feature-title" class="feature__title">
+            {featured.data.title}
+          </h2>
+          {featured.data.subtitle && <p class="feature__sub">{featured.data.subtitle}</p>}
+          <p class="mono feature__meta">
+            {featured.data.topics[0]?.toUpperCase()} · LESEZEIT {readingClock(featuredMinutes)} ·{' '}
+            {formatDate(featured.data.publishedAt)} · WEITERLESEN →
+          </p>
+        </a>
+      </section>
+    )
+  }
+
+  <!-- ── Selected stories (editorial index, not cards) ─────────────────── -->
+  {
+    selected.length > 0 && (
+      <section class="grid-editorial selected" aria-labelledby="selected-title" data-reveal>
+        <div class="selected__head">
+          <h2 id="selected-title" class="selected__heading">
+            Ausgewählte Geschichten
+          </h2>
+          <a class="mono selected__all" href="/stories">
+            ALLE →
+          </a>
+        </div>
+        <ol class="selected__list">
+          {selected.map((s, i) => (
+            <li class="selected__item">
+              <a href={`/stories/${slugOf(s.id)}`} class="selected__row">
+                <span class="mono selected__num">{pad(i + 2)}</span>
+                <span class="selected__body">
+                  <span class="selected__title">{s.data.title}</span>
+                  {s.data.subtitle && <span class="selected__sub">{s.data.subtitle}</span>}
+                </span>
+                <span class="mono selected__topic">{s.data.topics[0]?.toUpperCase()}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  <!-- ── Themes / topics ───────────────────────────────────────────────── -->
+  {
+    topics.length > 0 && (
+      <section class="grid-editorial topics" aria-labelledby="topics-title" data-reveal>
+        <h2 id="topics-title" class="mono topics__label">
+          Themen
+        </h2>
+        <ul class="topics__list">
+          {topics.map((t) => (
+            <li>
+              <a href="/index" class="topics__tag">
+                {t.topic} <span class="mono topics__count">{pad(t.count, 2)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <!-- ── Manifesto fragment ────────────────────────────────────────────── -->
+  <section class="grid-editorial manifest" aria-labelledby="manifest-title" data-reveal>
+    <p class="mono manifest__label">Manifest / Fragment</p>
+    <blockquote class="manifest__quote" id="manifest-title">
+      Wir glauben an das lange Schauen. An Geschichten, die sich nicht auf eine
+      Überschrift reduzieren lassen. Aperçu ist der Versuch, Technologie so zu erzählen,
+      wie man sie erlebt — langsam, dann plötzlich.
+    </blockquote>
+    <a href="/about" class="mono manifest__more">Über Aperçu →</a>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Opening */
+  .opening {
+    padding-block: clamp(2rem, 6vh, 5rem) clamp(3rem, 8vh, 6rem);
+    min-height: min(88vh, 60rem);
+    display: flex;
+    align-items: center;
+  }
+  .opening__grid {
+    width: 100%;
+    align-content: center;
+    row-gap: 1.5rem;
+  }
+  .opening__meta {
+    grid-column: 1 / -1;
+  }
+  .opening__meta--bottom {
+    color: var(--c-ink-faint);
+  }
+  .wordmark {
+    grid-column: 1 / -1;
+    font-size: clamp(4.5rem, 22vw, 18rem);
+    line-height: 0.82;
+    letter-spacing: -0.03em;
+    margin: 0.5rem 0;
+    display: grid;
+  }
+  .wordmark__row--accent {
+    color: var(--c-accent);
+  }
+  .opening__tagline {
+    grid-column: 1 / -1;
+    font-size: clamp(1.3rem, 1rem + 1.6vw, 2.2rem);
+    color: var(--c-ink-dim);
+    max-width: 26ch;
+  }
+  @media (min-width: 60rem) {
+    .opening__tagline {
+      grid-column: 7 / -1;
+      justify-self: end;
+      text-align: right;
+    }
+  }
+
+  /* Feature */
+  .feature {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    border-top: 1px solid var(--c-line);
+    row-gap: 1rem;
+  }
+  .feature__kicker {
+    grid-column: 1 / -1;
+    color: var(--c-accent);
+  }
+  .feature__link {
+    grid-column: 1 / -1;
+    display: block;
+  }
+  @media (min-width: 60rem) {
+    .feature__link {
+      grid-column: 1 / 11;
+    }
+  }
+  .feature__title {
+    font-size: clamp(2.6rem, 1.5rem + 7vw, 8rem);
+    line-height: 0.95;
+    transition: color 0.25s var(--ease-out);
+  }
+  .feature__link:hover .feature__title {
+    color: var(--c-accent);
+  }
+  .feature__sub {
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.7rem);
+    color: var(--c-ink-dim);
+    max-width: 44ch;
+    margin-block: 1.2rem;
+  }
+  .feature__meta {
+    color: var(--c-ink-faint);
+  }
+
+  /* Selected */
+  .selected {
+    padding-block: clamp(2rem, 6vw, 4rem);
+    border-top: 1px solid var(--c-line);
+    row-gap: 2rem;
+  }
+  .selected__head {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .selected__heading {
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+  }
+  .selected__all {
+    color: var(--c-ink-dim);
+  }
+  .selected__all:hover {
+    color: var(--c-accent);
+  }
+  .selected__list {
+    grid-column: 1 / -1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--c-line);
+  }
+  .selected__row {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0.4rem 1.2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--c-line);
+    align-items: start;
+  }
+  @media (min-width: 55rem) {
+    .selected__row {
+      grid-template-columns: 3rem 1fr 10rem;
+      align-items: baseline;
+    }
+  }
+  .selected__num {
+    color: var(--c-ink-faint);
+  }
+  .selected__title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 1.1rem + 1.6vw, 2.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    transition: color 0.2s var(--ease-out);
+  }
+  .selected__row:hover .selected__title {
+    color: var(--c-accent);
+  }
+  .selected__sub {
+    display: block;
+    color: var(--c-ink-dim);
+    margin-top: 0.4rem;
+    max-width: 52ch;
+  }
+  .selected__topic {
+    color: var(--c-ink-faint);
+  }
+  @media (min-width: 55rem) {
+    .selected__topic {
+      text-align: right;
+    }
+  }
+
+  /* Topics */
+  .topics {
+    padding-block: clamp(2rem, 6vw, 4rem);
+    border-top: 1px solid var(--c-line);
+    row-gap: 1.5rem;
+  }
+  .topics__label {
+    grid-column: 1 / -1;
+    color: var(--c-ink-faint);
+  }
+  .topics__list {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .topics__tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--c-line-strong);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    transition:
+      border-color 0.2s var(--ease-out),
+      color 0.2s var(--ease-out);
+  }
+  .topics__tag:hover {
+    border-color: var(--c-accent);
+    color: var(--c-accent);
+  }
+  .topics__count {
+    color: var(--c-ink-faint);
+  }
+
+  /* Manifest */
+  .manifest {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    border-top: 1px solid var(--c-line);
+    row-gap: 1.5rem;
+  }
+  .manifest__label {
+    grid-column: 1 / -1;
+    color: var(--c-accent);
+  }
+  .manifest__quote {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 1.1rem + 2.6vw, 3.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  @media (min-width: 60rem) {
+    .manifest__quote {
+      grid-column: 2 / 11;
+      max-width: 24ch;
+    }
+  }
+  .manifest__more {
+    grid-column: 1 / -1;
+    color: var(--c-ink-dim);
+  }
+  .manifest__more:hover {
+    color: var(--c-accent);
+  }
+</style>

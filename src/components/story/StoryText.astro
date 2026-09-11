@@ -1,0 +1,29 @@
+---
+/**
+ * A framed text block for emphasis within the flow. Use `lead` for the opening
+ * standfirst paragraph; default renders a normal measured block. Body prose in
+ * MDX flows fine on its own — this is for deliberate typographic moments.
+ */
+export interface Props {
+  lead?: boolean;
+}
+const { lead = false } = Astro.props;
+---
+
+<div class:list={['storytext', { 'storytext--lead': lead }]} data-reveal>
+  <slot />
+</div>
+
+<style>
+  .storytext {
+    color: var(--c-ink);
+  }
+  .storytext--lead {
+    font-size: clamp(1.3rem, 1.1rem + 1.1vw, 1.9rem);
+    line-height: 1.4;
+    color: var(--c-ink);
+  }
+  .storytext--lead :global(p) {
+    margin: 0;
+  }
+</style>

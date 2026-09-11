@@ -1,0 +1,73 @@
+---
+import BaseHead from '@/components/core/BaseHead.astro';
+import Texture from '@/components/core/Texture.astro';
+import SiteNav from '@/components/navigation/SiteNav.astro';
+import SiteFooter from '@/components/navigation/SiteFooter.astro';
+import { t } from '@/lib/i18n';
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  authors?: string[];
+  noindex?: boolean;
+  /** Hide the global footer (e.g. on the 404 page). */
+  bare?: boolean;
+}
+
+const { bare = false, ...head } = Astro.props;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <BaseHead {...head} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">{t('skip.content')}</a>
+    <Texture />
+    <div class="page">
+      <SiteNav />
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+      {!bare && <SiteFooter />}
+    </div>
+
+    <script>
+      // Reveal-on-scroll via IntersectionObserver. No-JS and reduced-motion
+      // users see all content immediately (handled in CSS). Runs once per element.
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const els = document.querySelectorAll('[data-reveal]');
+      if (reduce || !('IntersectionObserver' in window)) {
+        els.forEach((el) => el.classList.add('is-revealed'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                obs.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+        );
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .page {
+    position: relative;
+    z-index: 1;
+  }
+  main:focus {
+    outline: none;
+  }
+</style>

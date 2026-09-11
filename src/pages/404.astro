@@ -1,0 +1,85 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const codeLines = [
+  '> GET /angeforderte-seite',
+  '> HTTP/1.1 404 NOT FOUND',
+  '> die adresse führt ins leere.',
+];
+---
+
+<BaseLayout title="404 — Nicht gefunden" description="Diese Seite existiert nicht." noindex bare>
+  <section class="grid-editorial nf" aria-labelledby="nf-title">
+    <p class="mono nf__code">FEHLER / 404</p>
+    <h1 id="nf-title" class="nf__title">404</h1>
+    <p class="nf__lead">Diese Adresse führt ins Leere. Vielleicht hilft der Weg zurück.</p>
+
+    <div class="nf__terminal mono" aria-hidden="true">
+      {codeLines.map((l) => <div class="nf__line">{l}</div>)}
+      <div class="nf__line nf__cursor">> _</div>
+    </div>
+
+    <nav class="nf__links mono" aria-label="Weiterführende Links">
+      <a href="/">→ Startseite</a>
+      <a href="/stories">→ Geschichten</a>
+      <a href="/index">→ Index</a>
+    </nav>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    min-height: 70vh;
+    align-content: center;
+    padding-block: 4rem;
+    row-gap: 1.2rem;
+  }
+  .nf__code {
+    grid-column: 1 / -1;
+    color: var(--c-red);
+  }
+  .nf__title {
+    grid-column: 1 / -1;
+    font-size: clamp(6rem, 30vw, 22rem);
+    line-height: 0.8;
+    color: var(--c-accent);
+  }
+  .nf__lead {
+    grid-column: 1 / -1;
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.8rem);
+    color: var(--c-ink-dim);
+    max-width: 34ch;
+  }
+  .nf__terminal {
+    grid-column: 1 / -1;
+    margin-top: 1rem;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid var(--c-line-strong);
+    background: var(--c-ground-sunken);
+    color: var(--c-ink-dim);
+    max-width: 40rem;
+    line-height: 1.9;
+  }
+  @media (min-width: 60rem) {
+    .nf__terminal {
+      grid-column: 1 / 8;
+    }
+  }
+  .nf__cursor {
+    color: var(--c-accent);
+  }
+  .nf__links {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  .nf__links a {
+    color: var(--c-ink);
+    transition: color 0.2s var(--ease-out);
+  }
+  .nf__links a:hover {
+    color: var(--c-accent);
+  }
+</style>

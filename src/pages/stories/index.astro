@@ -1,0 +1,124 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getPublishedStories, estimateReadingMinutes } from '@/lib/stories';
+import { formatDate, readingClock, pad } from '@/lib/format';
+
+export const prerender = true;
+
+const stories = await getPublishedStories();
+const slugOf = (id: string) => id.replace(/\/index$/, '');
+---
+
+<BaseLayout
+  title="Geschichten"
+  description="Alle Langform-Reportagen und Essays von Aperçu."
+>
+  <section class="grid-editorial head" aria-labelledby="stories-title">
+    <p class="mono head__kicker">ARCHIV / GESCHICHTEN</p>
+    <h1 id="stories-title" class="head__title">Geschichten</h1>
+    <p class="head__lead">
+      Langform-Reportagen über Technologie und die Systeme, die unseren Alltag ordnen.
+    </p>
+  </section>
+
+  <section class="grid-editorial listing" aria-label="Alle Geschichten">
+    <ol class="listing__list">
+      {
+        stories.map((s, i) => (
+          <li class="listing__item" data-reveal>
+            <a href={`/stories/${slugOf(s.id)}`} class="listing__row">
+              <span class="mono listing__num">{pad(i + 1)}</span>
+              <span class="listing__body">
+                <span class="listing__title">{s.data.title}</span>
+                {s.data.subtitle && <span class="listing__sub">{s.data.subtitle}</span>}
+                <span class="mono listing__meta">
+                  {s.data.topics.map((t) => t.toUpperCase()).join(' · ')} · LESEZEIT{' '}
+                  {readingClock(estimateReadingMinutes(s.body, s.data.readingMinutes))} ·{' '}
+                  {formatDate(s.data.publishedAt)}
+                  {s.data.illustrative && ' · DEMO'}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+    {stories.length === 0 && <p class="listing__empty mono">Noch keine Geschichten.</p>}
+  </section>
+</BaseLayout>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 8vw, 5rem) clamp(1.5rem, 4vw, 3rem);
+    row-gap: 1rem;
+  }
+  .head__kicker {
+    grid-column: 1 / -1;
+    color: var(--c-accent);
+  }
+  .head__title {
+    grid-column: 1 / -1;
+    font-size: clamp(3rem, 1.5rem + 10vw, 10rem);
+    line-height: 0.9;
+  }
+  .head__lead {
+    grid-column: 1 / -1;
+    max-width: 44ch;
+    font-size: clamp(1.1rem, 1rem + 0.8vw, 1.5rem);
+    color: var(--c-ink-dim);
+  }
+  @media (min-width: 60rem) {
+    .head__lead {
+      grid-column: 1 / 8;
+    }
+  }
+  .listing {
+    padding-bottom: 4rem;
+  }
+  .listing__list {
+    grid-column: 1 / -1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--c-line);
+  }
+  .listing__row {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.5rem 1.5rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .listing__num {
+    color: var(--c-ink-faint);
+    padding-top: 0.4rem;
+  }
+  .listing__title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.8rem, 1.2rem + 3vw, 3.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    transition: color 0.2s var(--ease-out);
+  }
+  .listing__row:hover .listing__title {
+    color: var(--c-accent);
+  }
+  .listing__sub {
+    display: block;
+    color: var(--c-ink-dim);
+    margin-top: 0.6rem;
+    max-width: 56ch;
+    font-size: 1.05rem;
+  }
+  .listing__meta {
+    display: block;
+    margin-top: 0.8rem;
+    color: var(--c-ink-faint);
+  }
+  .listing__empty {
+    grid-column: 1 / -1;
+    padding: 3rem 0;
+  }
+</style>
