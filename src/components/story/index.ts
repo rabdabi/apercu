@@ -25,3 +25,7 @@ export { default as CinematicChapter } from './CinematicChapter.astro';
 export { default as RevealText } from './RevealText.astro';
 export { default as Motif } from './Motif.astro';
 export { default as AmbientClip } from '@/components/media/AmbientClip.astro';
+export { default as MediaMask } from '@/components/media/MediaMask.astro';
+export { default as MediaMosaic } from '@/components/media/MediaMosaic.astro';
+export { default as MediaCollage } from '@/components/media/MediaCollage.astro';
+export { default as FilmPlayer } from '@/components/media/FilmPlayer.astro';

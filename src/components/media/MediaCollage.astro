@@ -1,0 +1,95 @@
+---
+import PlaceholderVisual from '@/components/story/PlaceholderVisual.astro';
+
+/**
+ * Editorial collage as punctuation (docs/visual-language §07): a base visual, an
+ * overlapping circular fragment, a tilted "document" card, and a label crossing
+ * the composition. Generated pieces now; real material swaps via slots later.
+ */
+export interface Props {
+  label?: string;
+  caption?: string;
+}
+const { label = 'DOSSIER', caption } = Astro.props;
+---
+
+<figure class="collage bleed-wide" data-reveal>
+  <div class="collage__stage">
+    <div class="collage__base"><PlaceholderVisual variant="grid" /></div>
+    <div class="collage__frag"><PlaceholderVisual variant="orbit" /></div>
+    <div class="collage__doc" aria-hidden="true">
+      <span class="mono">FILE / 0007</span>
+      <span class="mono">STATUS / OFFEN</span>
+      <span class="collage__redact"></span>
+      <span class="collage__redact collage__redact--short"></span>
+    </div>
+    <span class="collage__label" aria-hidden="true">{label}</span>
+  </div>
+  {caption && <figcaption class="mono collage__cap">{caption}</figcaption>}
+</figure>
+
+<style>
+  .collage {
+    margin: clamp(2.5rem, 6vw, 4.5rem) 0;
+  }
+  .collage__stage {
+    position: relative;
+    max-width: 54rem;
+    margin-inline: auto;
+    aspect-ratio: 16 / 10;
+  }
+  .collage__base {
+    position: absolute;
+    inset: 0 22% 12% 0;
+  }
+  .collage__base :global(.pv svg) {
+    height: 100%;
+  }
+  .collage__frag {
+    position: absolute;
+    width: 34%;
+    right: 4%;
+    top: 8%;
+    border: 1px solid var(--c-line-strong);
+    box-shadow: -8px 8px 0 rgba(26, 23, 18, 0.12);
+  }
+  .collage__doc {
+    position: absolute;
+    left: 6%;
+    bottom: 0;
+    width: 30%;
+    min-width: 9rem;
+    background: var(--c-ground);
+    border: 1px solid var(--c-line-strong);
+    padding: 0.8rem;
+    display: grid;
+    gap: 0.5rem;
+    transform: rotate(-3deg);
+    box-shadow: 6px 6px 0 rgba(26, 23, 18, 0.1);
+  }
+  .collage__redact {
+    height: 0.7rem;
+    background: var(--c-ink);
+    width: 100%;
+  }
+  .collage__redact--short {
+    width: 60%;
+  }
+  .collage__label {
+    position: absolute;
+    right: 0;
+    bottom: 14%;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    letter-spacing: -0.02em;
+    color: var(--c-rubric);
+    mix-blend-mode: multiply;
+    line-height: 0.8;
+  }
+  .collage__cap {
+    margin-top: 0.7rem;
+    text-align: center;
+    color: var(--c-ink-faint);
+  }
+</style>

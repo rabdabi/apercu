@@ -29,6 +29,12 @@ import {
   Timeline,
   ImageReveal,
   SourceNote,
+  CinematicChapter,
+  MediaMosaic,
+  MediaMask,
+  MediaCollage,
+  AmbientClip,
+  FilmPlayer,
 } from '@/components/story';
 
 <StoryText lead>
@@ -61,6 +67,14 @@ Wir haben gelernt, Aufmerksamkeit zu messen. Was wir verlernt haben, ist, Arbeit
 bewerten, die sich nicht messen lässt.
 </PullQuote>
 
+<CinematicChapter
+  bleed
+  kicker="Die Zahl"
+  title="18 000 000 000 Dollar."
+  lead="So viel, heisst es, war es einem Konzern wert, die Menschen zu halten, die seine Algorithmen verstehen."
+  variant="film"
+/>
+
 <ChapterIntro number={2} title="Die Kluft, in Zahlen" />
 
 Um die Distanz greifbar zu machen, hilft ein Vergleich zwischen dem, was an der Spitze
@@ -84,6 +98,11 @@ Platzhalter für die Berechnungsgrundlage des Gehaltsverhältnisses.
 <SourceNote id="03">
 Platzhalter für die zitierte Umfrage.
 </SourceNote>
+
+<MediaCollage
+  label="QUELLEN"
+  caption="ABB. 02 — Beleglage, in Fragmenten. Generierte Illustration, Platzhalter."
+/>
 
 <ChapterIntro number={3} title="Wie ein System entscheidet, bevor wir es merken" />
 
@@ -110,10 +129,11 @@ Platzhalter für die zitierte Umfrage.
   </StickyStep>
 </StickyStory>
 
-<FullBleedMedia
-  variant="wave"
-  caption="ABB. 01 — Rückkopplung als stehende Welle. Generierte Illustration, Platzhalter."
-/>
+<MediaMosaic caption="ABB. 01 — Das System sieht uns in Fragmenten. Beim Scrollen zerfällt das Bild und fügt sich wieder." />
+
+<figure class="bleed-full" style="margin:clamp(2.5rem,6vw,5rem) 0;height:clamp(18rem,60vh,40rem);position:relative;overflow:hidden;border-block:1px solid var(--c-line);">
+  <AmbientClip fill />
+</figure>
 
 <ChapterIntro number={4} title="Zwei Ökonomien, eine Oberfläche" />
 
@@ -143,12 +163,15 @@ Verhandlungsmacht über ihren Preis.
   ]}
 />
 
-<ImageReveal
+<MediaMask
+  shape="aperture"
   variant="orbit"
-  caption="ABB. 04 — Ein System ordnet sich um einen einzigen Punkt. Generierte Illustration."
+  caption="ABB. 04 — Beobachtet. Ein System ordnet sich um einen einzigen Punkt."
 />
 
 Am Ende steht keine Verschwörung, sondern eine Bewertung. Wir haben uns darauf
 geeinigt, dass die Kontrolle über ein Muster mehr wert ist als die Arbeit, aus der das
 Muster entsteht. Achtzehn Milliarden sind dann nicht die Ausnahme — sie sind der Preis,
 den diese Einigung sichtbar macht.
+
+<FilmPlayer title="Signal / Rauschen — der Film zur Geschichte" duration="02:31" />

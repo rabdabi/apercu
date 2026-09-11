@@ -1,0 +1,76 @@
+---
+/**
+ * A film the reader intentionally watches with sound: native controls, no
+ * autoplay, poster, captions. Distinct from AmbientClip (moving illustration).
+ * With no source it shows an honest "Film folgt" pending state — never a fake
+ * play button (docs: NO FAKE FUNCTIONALITY).
+ */
+export interface Props {
+  webm?: string;
+  mp4?: string;
+  poster?: string;
+  captions?: string;
+  title: string;
+  duration?: string; // e.g. "02:31"
+}
+const { webm, mp4, poster, captions, title, duration } = Astro.props;
+const hasSource = Boolean(webm || mp4);
+---
+
+<figure class="film bleed-wide" data-reveal>
+  {
+    hasSource ? (
+      <video class="film__video" controls preload="none" playsinline poster={poster} aria-label={`Film: ${title}`}>
+        {webm && <source src={webm} type="video/webm" />}
+        {mp4 && <source src={mp4} type="video/mp4" />}
+        {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" default />}
+      </video>
+    ) : (
+      <div class="film__pending" role="note">
+        <span class="mono film__tag">FILM / FOLGT</span>
+        <p class="film__title">{title}</p>
+        <p class="film__note mono">
+          Der animierte Film wird nachgereicht{duration ? ` · ~${duration}` : ''}.
+        </p>
+      </div>
+    )
+  }
+</figure>
+
+<style>
+  .film {
+    margin: clamp(2.5rem, 6vw, 4.5rem) 0;
+  }
+  .film__video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    background: #000;
+    border: 1px solid var(--c-line);
+  }
+  .film__pending {
+    aspect-ratio: 16 / 9;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.7rem;
+    text-align: center;
+    padding: 2rem;
+    background: var(--c-ink-ground);
+    color: var(--c-on-accent);
+    border: 1px solid var(--c-line);
+  }
+  .film__tag {
+    color: var(--c-signal);
+  }
+  .film__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 1.1rem + 1.5vw, 2.2rem);
+    margin: 0;
+  }
+  .film__note {
+    margin: 0;
+    color: var(--c-ink-faint);
+  }
+</style>

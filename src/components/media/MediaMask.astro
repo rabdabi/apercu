@@ -1,0 +1,93 @@
+---
+import PlaceholderVisual from '@/components/story/PlaceholderVisual.astro';
+
+/**
+ * Masks an image/visual into a non-rectangular window whose shape relates to the
+ * subject (docs/visual-language §08). Aperture/viewfinder = observation.
+ * Degrades to a plain rectangle where clip-path is unsupported.
+ */
+export interface Props {
+  shape?: 'aperture' | 'window' | 'circle';
+  variant?: 'grid' | 'orbit' | 'bars' | 'wave';
+  src?: string;
+  alt?: string;
+  caption?: string;
+}
+const { shape = 'aperture', variant = 'orbit', src, alt, caption } = Astro.props;
+---
+
+<figure class="mask bleed-wide" data-shape={shape} data-reveal>
+  <div class="mask__frame">
+    <div class="mask__clip">
+      {
+        src ? (
+          <img src={src} alt={alt ?? ''} loading="lazy" decoding="async" />
+        ) : (
+          <PlaceholderVisual variant={variant} />
+        )
+      }
+    </div>
+    {/* Viewfinder reticle — decorative, reinforces "observation". */}
+    <svg class="mask__reticle" viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+      <path d="M8 4 H4 V8 M92 4 H96 V8 M8 96 H4 V92 M92 96 H96 V92" />
+      <circle cx="50" cy="50" r="1.4" />
+    </svg>
+  </div>
+  {caption && <figcaption class="mono mask__cap">{caption}</figcaption>}
+</figure>
+
+<style>
+  .mask {
+    margin: clamp(2rem, 6vw, 4rem) 0;
+  }
+  .mask__frame {
+    position: relative;
+    max-width: 44rem;
+    margin-inline: auto;
+    aspect-ratio: 1;
+  }
+  .mask__clip {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .mask__clip :global(img),
+  .mask__clip :global(.pv),
+  .mask__clip :global(svg) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  [data-shape='aperture'] .mask__clip {
+    clip-path: polygon(
+      50% 0%, 79% 9%, 97% 35%, 97% 65%, 79% 91%,
+      50% 100%, 21% 91%, 3% 65%, 3% 35%, 21% 9%
+    );
+  }
+  [data-shape='circle'] .mask__clip {
+    clip-path: circle(49% at 50% 50%);
+  }
+  [data-shape='window'] .mask__clip {
+    clip-path: inset(4% round 2px);
+  }
+  .mask__reticle {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--c-rubric);
+    stroke-width: 0.6;
+    opacity: 0.7;
+  }
+  .mask__reticle circle {
+    fill: var(--c-rubric);
+    stroke: none;
+  }
+  .mask__cap {
+    margin-top: 0.7rem;
+    text-align: center;
+    color: var(--c-ink-faint);
+  }
+</style>

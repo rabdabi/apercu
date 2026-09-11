@@ -1,0 +1,145 @@
+---
+/**
+ * Fragment effect (docs/visual-language §07/§09): a generated "system" image is
+ * split into tiles that scatter/magnify/darken as the block enters, then resolve
+ * to the whole image as it centres, then scatter again as it leaves. Under
+ * reduced-motion / no-JS it stays fully resolved. Our own take — not a copy.
+ */
+export interface Props {
+  cols?: number;
+  rows?: number;
+  caption?: string;
+  src?: string; // real image later; default = generated SVG
+}
+const { cols = 6, rows = 4, caption, src } = Astro.props;
+
+// Generated "portrait of the system": grid + central aperture + scattered nodes.
+const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240'>
+<rect width='320' height='240' fill='%23e3dbc8'/>
+${Array.from({ length: 17 }, (_, i) => `<line x1='${i * 20}' y1='0' x2='${i * 20}' y2='240' stroke='%23c4baa3' stroke-width='0.6'/>`).join('')}
+${Array.from({ length: 13 }, (_, i) => `<line x1='0' y1='${i * 20}' x2='320' y2='${i * 20}' stroke='%23c4baa3' stroke-width='0.6'/>`).join('')}
+<circle cx='160' cy='120' r='62' fill='none' stroke='%231a1712' stroke-width='2'/>
+<circle cx='160' cy='120' r='30' fill='%23cb3321'/>
+<circle cx='160' cy='120' r='9' fill='%23e3dbc8'/>
+${[[60, 60], [260, 70], [70, 190], [255, 185], [160, 30], [160, 215]].map(([x, y]) => `<circle cx='${x}' cy='${y}' r='4' fill='%23b96b1e'/>`).join('')}
+</svg>`;
+const bg = src ?? `url("data:image/svg+xml,${svg.replace(/\n/g, '')}")`;
+
+const tiles = Array.from({ length: cols * rows }, (_, i) => {
+  const col = i % cols;
+  const row = Math.floor(i / cols);
+  // Deterministic pseudo-random per tile.
+  const r = (n: number) => {
+    const s = Math.sin(i * 12.9898 + n * 78.233) * 43758.5453;
+    return s - Math.floor(s);
+  };
+  return {
+    posX: cols > 1 ? (col / (cols - 1)) * 100 : 0,
+    posY: rows > 1 ? (row / (rows - 1)) * 100 : 0,
+    dx: Math.round((r(1) - 0.5) * 160),
+    dy: Math.round((r(2) - 0.5) * 120),
+    mag: r(3) < 0.25 ? 0.35 : 0,
+    blk: r(4) < 0.18 ? 1 : 0,
+  };
+});
+const bgSize = `${cols * 100}% ${rows * 100}%`;
+---
+
+<figure class="mosaic bleed-wide" data-reveal>
+  <div
+    class="mosaic__grid"
+    style={`--cols:${cols};--rows:${rows}`}
+    data-mosaic
+    role="img"
+    aria-label="Systemdarstellung, die sich beim Scrollen fragmentiert und wieder zusammensetzt"
+  >
+    {
+      tiles.map((t) => (
+        <span
+          class="mosaic__tile"
+          style={`background-image:${bg};background-size:${bgSize};background-position:${t.posX}% ${t.posY}%;--dx:${t.dx};--dy:${t.dy};--mag:${t.mag};--blk:${t.blk}`}
+        />
+      ))
+    }
+  </div>
+  {caption && <figcaption class="mono mosaic__cap">{caption}</figcaption>}
+</figure>
+
+<style>
+  .mosaic {
+    margin: clamp(2.5rem, 6vw, 4.5rem) 0;
+  }
+  .mosaic__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+    aspect-ratio: 4 / 3;
+    max-width: 52rem;
+    margin-inline: auto;
+    border: 1px solid var(--c-line);
+    overflow: hidden;
+    --s: 0; /* scatter 0..1, set by JS */
+  }
+  .mosaic__tile {
+    background-repeat: no-repeat;
+    transform: translate(calc(var(--dx) * 1px * var(--s)), calc(var(--dy) * 1px * var(--s)))
+      scale(calc(1 + var(--mag) * var(--s)));
+    filter: brightness(calc(1 - var(--blk) * 0.85 * var(--s)));
+    transition:
+      transform 0.5s var(--ease-out),
+      filter 0.5s var(--ease-out);
+    will-change: transform;
+  }
+  .mosaic__cap {
+    margin-top: 0.7rem;
+    text-align: center;
+    color: var(--c-ink-faint);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mosaic__grid {
+      --s: 0 !important;
+    }
+    .mosaic__tile {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const grids = Array.from(document.querySelectorAll<HTMLElement>('[data-mosaic]'));
+  if (!reduce && 'IntersectionObserver' in window && grids.length) {
+    const active = new Set<HTMLElement>();
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight;
+      for (const g of active) {
+        const rect = g.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        // 0 when centred, →1 toward the edges of the viewport.
+        const d = Math.abs(center - vh / 2) / (vh / 2);
+        g.style.setProperty('--s', String(Math.max(0, Math.min(1, d))));
+      }
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) active.add(e.target as HTMLElement);
+          else active.delete(e.target as HTMLElement);
+        }
+      },
+      { threshold: 0 },
+    );
+    grids.forEach((g) => io.observe(g));
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+</script>
