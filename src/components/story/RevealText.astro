@@ -1,0 +1,86 @@
+---
+/**
+ * Progressive text reveal: words brighten as the block scrolls through the
+ * viewport (Arc'teryx System_0 treatment). The full text is real, semantic DOM;
+ * the effect is opacity only. No-JS and reduced-motion show all words lit.
+ */
+export interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'p';
+  class?: string;
+}
+const { text, as: Tag = 'p', class: className = '' } = Astro.props;
+const words = text.split(/\s+/).filter(Boolean);
+---
+
+<Tag class:list={['reveal-words', className]} data-reveal-words>
+  {words.map((w: string, i: number) => <span class="rw" style={`--i:${i}`}>{w}{i < words.length - 1 ? ' ' : ''}</span>)}
+</Tag>
+
+<style>
+  .reveal-words {
+    --lit: 9999;
+  }
+  .rw {
+    opacity: 0.28;
+    transition: opacity 0.4s var(--ease-out);
+  }
+  /* A word is lit when its index is below the current --lit count. */
+  .rw {
+    opacity: calc(0.28 + 0.72 * clamp(0, (var(--lit) - var(--i)), 1));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rw {
+      opacity: 1;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const blocks = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal-words]'));
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    blocks.forEach((b) => b.style.setProperty('--lit', '9999'));
+  } else {
+    const active = new Set<HTMLElement>();
+    let ticking = false;
+
+    const update = () => {
+      const vh = window.innerHeight;
+      for (const b of active) {
+        const rect = b.getBoundingClientRect();
+        // Reveal zone: from 82% viewport height up to 38%.
+        const start = vh * 0.82;
+        const end = vh * 0.38;
+        const p = (start - rect.top) / (start - end);
+        const clamped = Math.max(0, Math.min(1, p));
+        const total = b.querySelectorAll('.rw').length;
+        b.style.setProperty('--lit', String(Math.round(clamped * total)));
+      }
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) active.add(e.target as HTMLElement);
+          else active.delete(e.target as HTMLElement);
+        }
+        update();
+      },
+      { threshold: 0 },
+    );
+    blocks.forEach((b) => io.observe(b));
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+</script>

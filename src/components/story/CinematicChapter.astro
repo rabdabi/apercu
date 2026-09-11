@@ -1,0 +1,211 @@
+---
+import AmbientClip from '@/components/media/AmbientClip.astro';
+import RevealText from './RevealText.astro';
+import Motif from './Motif.astro';
+
+/**
+ * Full-bleed cinematic chapter (Arc'teryx System_0 register): a dark or
+ * flood-colour scene with a numbered index, a centered small-caps title that
+ * reveals on scroll, the recurring motif, and an optional "+" disclosure.
+ * Used as narrative punctuation between paper sections (docs/visual-language §14).
+ */
+export interface Props {
+  index?: string; // "I" | "01"
+  kicker?: string; // small label above the title
+  title: string;
+  lead?: string;
+  variant?: 'film' | 'dark' | 'lime' | 'red';
+  clipSrc?: string; // real footage; omitted → generated canvas
+  clipPoster?: string;
+  motif?: boolean;
+  bleed?: boolean; // add when used inside a story-body grid
+  id?: string;
+}
+const {
+  index,
+  kicker,
+  title,
+  lead,
+  variant = 'film',
+  clipSrc,
+  clipPoster,
+  motif = true,
+  bleed = false,
+  id,
+} = Astro.props;
+
+const hasClip = variant === 'film';
+const hasDisclosure = Astro.slots.has('default');
+---
+
+<section
+  class:list={['cine', `cine--${variant}`, { 'bleed-full': bleed }]}
+  id={id}
+  data-reveal
+>
+  {hasClip && (
+    <div class="cine__bg">
+      <AmbientClip src={clipSrc} poster={clipPoster} fill tint="ink" />
+      <div class="cine__scrim"></div>
+    </div>
+  )}
+
+  <div class="cine__inner">
+    <div class="cine__meta">
+      {index && <span class="mono cine__index">{index}</span>}
+      {kicker && <span class="mono cine__kicker">{kicker}</span>}
+    </div>
+
+    <RevealText text={title} as="h2" class="cine__title" />
+
+    {lead && <p class="cine__lead">{lead}</p>}
+
+    {
+      hasDisclosure && (
+        <details class="cine__more">
+          <summary aria-label="Mehr anzeigen">
+            <span class="cine__plus" aria-hidden="true">+</span>
+          </summary>
+          <div class="cine__more-body">
+            <slot />
+          </div>
+        </details>
+      )
+    }
+
+    {motif && <Motif class="cine__motif" size={72} />}
+  </div>
+</section>
+
+<style>
+  .cine {
+    position: relative;
+    isolation: isolate;
+    min-height: clamp(30rem, 82vh, 58rem);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: clamp(3rem, 10vh, 7rem) var(--gutter);
+    overflow: clip;
+  }
+  /* Placed at page/story level, the section is already full width. */
+  .cine:not(.bleed-full) {
+    width: 100%;
+  }
+
+  .cine--film,
+  .cine--dark {
+    background: var(--c-ink-ground);
+    color: var(--c-on-accent);
+  }
+  .cine--red {
+    background: var(--c-rubric);
+    color: var(--c-on-accent);
+  }
+  .cine--lime {
+    background: var(--c-signal);
+    color: #1a1712;
+  }
+
+  .cine__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .cine__scrim {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 50% 50%, transparent 30%, rgba(23, 20, 15, 0.55));
+  }
+
+  .cine__inner {
+    max-width: 52rem;
+    display: grid;
+    justify-items: center;
+    gap: 1.4rem;
+  }
+  .cine__meta {
+    display: flex;
+    gap: 1.2rem;
+    align-items: baseline;
+    justify-content: center;
+    color: currentColor;
+    opacity: 0.7;
+  }
+  .cine__index {
+    font-size: 0.9rem;
+    color: currentColor;
+  }
+  .cine__kicker {
+    color: currentColor;
+  }
+  .cine :global(.cine__title) {
+    font-family: var(--font-display);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.06;
+    font-size: clamp(1.9rem, 1.2rem + 3.6vw, 4.2rem);
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  .cine--lime :global(.rw),
+  .cine--red :global(.rw) {
+    /* On solid floods the reveal dim floor is higher for legibility. */
+    opacity: calc(0.5 + 0.5 * clamp(0, (var(--lit) - var(--i)), 1));
+  }
+  .cine__lead {
+    margin: 0;
+    max-width: 44ch;
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 1rem + 0.6vw, 1.35rem);
+    opacity: 0.85;
+  }
+  .cine__more {
+    margin-top: 0.4rem;
+  }
+  .cine__more summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.75;
+    transition: opacity 0.2s var(--ease-out);
+  }
+  .cine__more summary::-webkit-details-marker {
+    display: none;
+  }
+  .cine__more[open] summary {
+    opacity: 1;
+  }
+  .cine__plus {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  .cine__more[open] .cine__plus::before {
+    content: '–';
+  }
+  .cine__more[open] .cine__plus {
+    font-size: 0;
+  }
+  .cine__more[open] .cine__plus::before {
+    font-size: 1.2rem;
+    font-family: var(--font-mono);
+  }
+  .cine__more-body {
+    margin-top: 1.2rem;
+    max-width: 42ch;
+    font-family: var(--font-body);
+    opacity: 0.85;
+    text-align: left;
+  }
+  .cine__motif {
+    color: currentColor;
+    margin-top: 0.6rem;
+  }
+</style>

@@ -20,3 +20,8 @@ export { default as ImageReveal } from './ImageReveal.astro';
 export { default as SourceNote } from './SourceNote.astro';
 export { default as PlaceholderVisual } from './PlaceholderVisual.astro';
 export { default as StoryOutro } from './StoryOutro.astro';
+// Cinematic register (Arc'teryx-inspired) + shared motif.
+export { default as CinematicChapter } from './CinematicChapter.astro';
+export { default as RevealText } from './RevealText.astro';
+export { default as Motif } from './Motif.astro';
+export { default as AmbientClip } from '@/components/media/AmbientClip.astro';

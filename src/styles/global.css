@@ -13,27 +13,31 @@
    Detail: 1970s modernism + terminal metadata.
    ──────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* Surfaces — charcoal, never absolute black. */
-  --c-ground: #14140f; /* page background, warm near-black */
-  --c-ground-raised: #1b1b15; /* raised panels / footer */
-  --c-ground-sunken: #0f0f0b; /* full-bleed scenes */
+  /* Ground — warm paper, whole site (never pure white). */
+  --c-ground: #f5f1e8; /* page background — warm paper */
+  --c-ground-raised: #ece6d8; /* raised panels / footer */
+  --c-ground-sunken: #e3dbc8; /* insets / sunken scenes */
+  --c-ink-ground: #17140f; /* full-bleed DARK chapter ground */
 
-  /* Ink */
-  --c-ink: #f4f0e6; /* primary — warm off-white */
-  --c-ink-dim: #a8a293; /* secondary — warm grey */
-  --c-ink-faint: #6f6a5c; /* tertiary / metadata grey */
+  /* Ink — warm near-black. */
+  --c-ink: #1a1712; /* primary text */
+  --c-ink-dim: #4a443a; /* secondary text */
+  --c-ink-faint: #8a8271; /* tertiary / metadata */
 
   /* Accents */
-  --c-signal: #c6f24e; /* primary — signal lime */
-  --c-amber: #e08b3c; /* secondary — burnt amber (sparingly) */
-  --c-red: #d1503f; /* danger / emphasis — muted signal red */
+  --c-rubric: #cb3321; /* PRIMARY — manuscript red */
+  --c-rubric-deep: #9e2716; /* red for body links (contrast-safe on paper) */
+  --c-signal: #c6f24e; /* lime — RARE full-bleed "electric" chapter only */
+  --c-amber: #b96b1e; /* secondary warm — darkened for paper */
+  --c-red: #b3271a; /* danger / emphasis */
 
   /* Lines — thin, architectural. */
-  --c-line: #33322a;
-  --c-line-strong: #4a483d;
+  --c-line: #d9d1bf;
+  --c-line-strong: #c4baa3;
 
-  /* Story accent — overridable per story via [data-accent]. */
-  --c-accent: var(--c-signal);
+  /* Roles */
+  --c-accent: var(--c-rubric); /* overridable per story via [data-accent] */
+  --c-on-accent: #f7f3ea; /* text on a red / dark accent fill */
 
   /* Type families */
   --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
@@ -162,7 +166,7 @@ video {
 
 /* ── Focus + accessibility ──────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--c-signal);
+  outline: 2px solid var(--c-rubric);
   outline-offset: 3px;
 }
 
@@ -172,8 +176,8 @@ video {
   top: -100%;
   z-index: 100;
   padding: 0.6rem 1rem;
-  background: var(--c-signal);
-  color: #14140f;
+  background: var(--c-rubric);
+  color: var(--c-on-accent);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.1em;
@@ -205,7 +209,7 @@ video {
   hyphens: auto;
 }
 .prose-editorial a {
-  color: var(--c-accent);
+  color: var(--c-rubric-deep);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
@@ -265,7 +269,7 @@ video {
   hyphens: auto;
 }
 .story-body :where(a) {
-  color: var(--c-accent);
+  color: var(--c-rubric-deep);
   text-decoration: underline;
   text-underline-offset: 0.18em;
   text-decoration-color: color-mix(in oklab, var(--c-accent) 55%, transparent);
