@@ -4,15 +4,21 @@ Production skills for **Aperçu Motion** — the semi-automated pipeline for the
 animated world. See `docs/` and the concept for the full picture; this plugin holds the
 Claude Code skills that read the repo's `content-bible/` and drive the pipeline gates.
 
-## Skills in this version
+## Skills
 
-| Command | Role |
-| ------- | ---- |
-| `/apercu-story` | Brief/logline → canon-consistent German script + beat sheet |
-| `/apercu-canon` | Validate a script/asset against the bible; emit a pass/flag report |
+The full pipeline, gate by gate:
 
-Planned next: `/apercu-storyboard`, `/apercu-modelsheet`, `/apercu-rive`,
-`/apercu-publish`, `/apercu-captions`.
+| Command | Gate | Role |
+| ------- | ---- | ---- |
+| `/apercu-story` | 01–02 | Brief/logline → canon-consistent German script + beat sheet |
+| `/apercu-canon` | gate | Validate a script/asset against the bible; emit a pass/flag report |
+| `/apercu-storyboard` | 03 | Script → shot list + LTX animatic brief + Moho scene manifest |
+| `/apercu-modelsheet` | 04 | Image-gen prompt pack + cleanup checklist for canonical assets |
+| `/apercu-rive` | 06 | Emil state-machine spec + episode scroll-map |
+| `/apercu-publish` | 07 | Scaffold episode.mdx, wire player/Rive/captions, build |
+| `/apercu-captions` | 08 | German WebVTT captions + distribution copy |
+
+Gate 05 (animation in Moho) is human craft — no skill.
 
 ## Using it
 
