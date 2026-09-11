@@ -1,0 +1,43 @@
+---
+/**
+ * A story section that drives the living Emil. When this section scrolls into
+ * view it dispatches an `emil:state` event; <RiveCharacter> listens and switches
+ * Emil's pose. Content renders normally, so the section is fully readable with
+ * no JavaScript and under reduced-motion — the state change is a progressive
+ * enhancement on top.
+ */
+export interface Props {
+  /** An Emil state name, e.g. "walk" | "shocked" | "point". See emil.md. */
+  state: string;
+  class?: string;
+}
+const { state, class: className = '' } = Astro.props;
+---
+
+<section class:list={['scroll-scene', className]} data-emil-state={state}>
+  <slot />
+</section>
+
+<style>
+  .scroll-scene {
+    scroll-margin-top: 20vh;
+  }
+</style>
+
+<script>
+  const scenes = document.querySelectorAll<HTMLElement>('[data-emil-state]');
+  if (scenes.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const state = (entry.target as HTMLElement).dataset.emilState;
+            if (state) window.dispatchEvent(new CustomEvent('emil:state', { detail: state }));
+          }
+        }
+      },
+      { rootMargin: '-40% 0px -40% 0px', threshold: 0 },
+    );
+    scenes.forEach((s) => io.observe(s));
+  }
+</script>

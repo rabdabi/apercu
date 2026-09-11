@@ -31,4 +31,37 @@ const stories = defineCollection({
   }),
 });
 
-export const collections = { stories };
+/**
+ * Animated episodes. The publishable page for each episode lives at
+ * `episodes/<slug>/episode.mdx` (production folder in the repo root); media
+ * (poster, video, .riv) is referenced from `public/episodes/<slug>/`.
+ * Folders prefixed with `_` (e.g. `_template`) are ignored by the loader.
+ */
+const episodes = defineCollection({
+  loader: glob({ pattern: '**/episode.{md,mdx}', base: './episodes' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    description: z.string().max(200),
+    lang: z.enum(['de', 'en']).default('de'),
+    publishedAt: z.coerce.date(),
+    updatedAt: z.coerce.date().optional(),
+    authors: z.array(z.string()).default(['Apercu association']),
+    topics: z.array(z.string()).default([]),
+    // Media (all relative to /public, e.g. "/episodes/pilot/poster.png").
+    poster: z.string().optional(),
+    videoWebm: z.string().optional(),
+    videoMp4: z.string().optional(),
+    captions: z.string().optional(),
+    durationSeconds: z.number().int().positive().optional(),
+    // Interactive character asset.
+    riveSrc: z.string().optional(),
+    riveStateMachine: z.string().optional(),
+    featured: z.boolean().default(false),
+    draft: z.boolean().default(false),
+    illustrative: z.boolean().default(false),
+    accent: z.string().optional(),
+  }),
+});
+
+export const collections = { stories, episodes };

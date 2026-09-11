@@ -174,6 +174,20 @@ docs/              deployment + phase-2 plan
 Infomaniak managed Node.js hosting — see
 [`docs/DEPLOY-INFOMANIAK.md`](docs/DEPLOY-INFOMANIAK.md).
 
+## Aperçu Motion (animation pipeline)
+
+A semi-automated production system for a recurring 2D animated world (the character
+**Emil**), integrated into this site:
+
+- [`content-bible/`](content-bible/) — the Git-versioned canon (Emil, world rules,
+  palette, motion language) that is the single source of truth.
+- [`episodes/`](episodes/) — per-episode production folders (`_template/` shows the
+  eight pipeline gates); the `episodes` content collection publishes each `episode.mdx`.
+- [`plugins/apercu-studio/`](plugins/apercu-studio/) — Claude Code skills
+  (`/apercu-story`, `/apercu-canon`) that read the bible and drive the pipeline.
+- Living character on the site: `RiveCharacter` island + `ScrollScene` drive Emil's
+  state from scroll position.
+
 ## Roadmap
 
 Community accounts, authentication, and the "agentic Aperçu" are planned as a

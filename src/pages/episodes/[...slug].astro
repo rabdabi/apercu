@@ -1,0 +1,119 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import EpisodePlayer from '@/components/interactive/EpisodePlayer.astro';
+import RiveCharacter from '@/components/interactive/RiveCharacter.tsx';
+import { isProduction } from '@/lib/env';
+import { formatDate, pad } from '@/lib/format';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('episodes', ({ data }) =>
+    isProduction ? data.draft === false : true,
+  );
+  return episodes.map((episode) => ({
+    params: { slug: episode.id.replace(/\/episode$/, '') },
+    props: { episode },
+  }));
+}
+
+interface Props {
+  episode: CollectionEntry<'episodes'>;
+}
+const { episode } = Astro.props as Props;
+const { data } = episode;
+const { Content } = await render(episode);
+const accentStyle = data.accent ? `--c-accent:${data.accent}` : undefined;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  type="article"
+  publishedTime={data.publishedAt}
+  modifiedTime={data.updatedAt}
+  authors={data.authors}
+  noindex={data.draft}
+>
+  <article class="episode" style={accentStyle}>
+    <header class="grid-editorial episode__head">
+      <p class="mono episode__kicker">
+        EPISODE / {pad(1)} · {(data.topics[0] ?? 'FILM').toUpperCase()}
+      </p>
+      <h1 class="episode__title">{data.title}</h1>
+      {data.subtitle && <p class="episode__sub">{data.subtitle}</p>}
+      <p class="mono episode__meta">
+        {formatDate(data.publishedAt)}
+        {data.illustrative && ' · ILLUSTRATIVE DEMO'}
+      </p>
+    </header>
+
+    <div class="grid-editorial">
+      <div class="episode__player col-wide">
+        <EpisodePlayer
+          webm={data.videoWebm}
+          mp4={data.videoMp4}
+          poster={data.poster}
+          captions={data.captions}
+          title={data.title}
+        />
+      </div>
+    </div>
+
+    {
+      data.riveSrc && (
+        <div class="grid-editorial">
+          <div class="episode__emil col-wide">
+            <RiveCharacter
+              client:visible
+              src={data.riveSrc}
+              stateMachine={data.riveStateMachine}
+            />
+          </div>
+        </div>
+      )
+    }
+
+    <div class="grid-editorial">
+      <div class="col-read prose-editorial episode__body">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .episode__head {
+    padding-block: clamp(2.5rem, 7vw, 5rem) clamp(1.5rem, 4vw, 2.5rem);
+    row-gap: 1rem;
+  }
+  .episode__kicker {
+    grid-column: 1 / -1;
+    color: var(--c-accent);
+  }
+  .episode__title {
+    grid-column: 1 / -1;
+    font-size: clamp(2.6rem, 1.5rem + 7vw, 7rem);
+    line-height: 0.94;
+  }
+  .episode__sub {
+    grid-column: 1 / -1;
+    max-width: 44ch;
+    font-size: clamp(1.15rem, 1rem + 1vw, 1.6rem);
+    color: var(--c-ink-dim);
+  }
+  .episode__meta {
+    grid-column: 1 / -1;
+    color: var(--c-ink-faint);
+  }
+  .episode__player {
+    margin-block: 1.5rem;
+  }
+  .episode__emil {
+    margin-block: 2rem;
+  }
+  .episode__body {
+    padding-block: 2rem 0;
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+/**
+ * Episode video player. Native <video>, no autoplay, poster to prevent layout
+ * shift, optional caption track. Deliberately not a heavy JS player — the
+ * browser's own controls are accessible and free.
+ */
+export interface Props {
+  webm?: string;
+  mp4?: string;
+  poster?: string;
+  captions?: string;
+  title: string;
+}
+const { webm, mp4, poster, captions, title } = Astro.props;
+const hasSource = Boolean(webm || mp4);
+---
+
+{
+  hasSource ? (
+    <figure class="player">
+      <video
+        class="player__video"
+        controls
+        preload="none"
+        playsinline
+        poster={poster}
+        aria-label={`Episode: ${title}`}
+      >
+        {webm && <source src={webm} type="video/webm" />}
+        {mp4 && <source src={mp4} type="video/mp4" />}
+        {captions && <track kind="captions" src={captions} srclang="de" label="Deutsch" default />}
+        Dein Browser kann dieses Video nicht abspielen.
+      </video>
+    </figure>
+  ) : (
+    <div class="player player--pending" role="note">
+      <span class="mono">RENDER / AUSSTEHEND</span>
+      <p>Die animierte Episode ist noch nicht hinterlegt. Sobald der Moho-Export vorliegt, erscheint der Film hier.</p>
+    </div>
+  )
+}
+
+<style>
+  .player {
+    margin: 0;
+    aspect-ratio: 16 / 9;
+    background: var(--c-ground-sunken);
+    border: 1px solid var(--c-line);
+  }
+  .player__video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    background: #000;
+  }
+  .player--pending {
+    display: grid;
+    place-content: center;
+    gap: 0.8rem;
+    text-align: center;
+    padding: 2rem;
+  }
+  .player--pending .mono {
+    color: var(--c-amber);
+  }
+  .player--pending p {
+    margin: 0;
+    color: var(--c-ink-dim);
+    max-width: 32ch;
+  }
+</style>

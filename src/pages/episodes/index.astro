@@ -1,0 +1,145 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isProduction } from '@/lib/env';
+import { formatDate, pad } from '@/lib/format';
+
+export const prerender = true;
+
+const episodes = (
+  await getCollection('episodes', ({ data }) =>
+    isProduction ? data.draft === false : true,
+  )
+).sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+const slugOf = (id: string) => id.replace(/\/episode$/, '');
+---
+
+<BaseLayout
+  title="Episoden"
+  description="Animierte Episoden von Aperçu — Langform-Geschichten über Macht, Geld und Aufmerksamkeit, in mittelalterlichem Gewand."
+>
+  <section class="grid-editorial head">
+    <p class="mono head__kicker">FILME / EPISODEN</p>
+    <h1 class="head__title">Episoden</h1>
+    <p class="head__lead">
+      Handgezeichnete Kurzfilme aus der Welt von Emil — und dazwischen bleibt die Figur
+      lebendig.
+    </p>
+  </section>
+
+  <section class="grid-editorial listing">
+    {
+      episodes.length === 0 ? (
+        <div class="empty col-wide">
+          <span class="mono empty__mark">[ 000 ]</span>
+          <p class="empty__title">Noch keine Episode veröffentlicht.</p>
+          <p class="empty__body mono">
+            Die Produktionspipeline steht (siehe content-bible/ &amp; plugins/apercu-studio).
+            Die erste Episode durchläuft gerade die acht Gates.
+          </p>
+        </div>
+      ) : (
+        <ol class="listing__list col-wide">
+          {episodes.map((e, i) => (
+            <li class="listing__item">
+              <a href={`/episodes/${slugOf(e.id)}`} class="listing__row">
+                <span class="mono listing__num">{pad(i + 1)}</span>
+                <span class="listing__body">
+                  <span class="listing__title">{e.data.title}</span>
+                  {e.data.subtitle && <span class="listing__sub">{e.data.subtitle}</span>}
+                  <span class="mono listing__meta">{formatDate(e.data.publishedAt)}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 8vw, 5rem) clamp(1.5rem, 4vw, 3rem);
+    row-gap: 1rem;
+  }
+  .head__kicker {
+    grid-column: 1 / -1;
+    color: var(--c-accent);
+  }
+  .head__title {
+    grid-column: 1 / -1;
+    font-size: clamp(3rem, 1.5rem + 10vw, 10rem);
+    line-height: 0.9;
+  }
+  .head__lead {
+    grid-column: 1 / -1;
+    max-width: 44ch;
+    font-size: clamp(1.1rem, 1rem + 0.8vw, 1.5rem);
+    color: var(--c-ink-dim);
+  }
+  @media (min-width: 60rem) {
+    .head__lead {
+      grid-column: 1 / 8;
+    }
+  }
+  .listing {
+    padding-bottom: 4rem;
+  }
+  .empty {
+    padding: 3rem 0 4rem;
+    border-top: 1px solid var(--c-line);
+    display: grid;
+    gap: 0.8rem;
+  }
+  .empty__mark {
+    color: var(--c-accent);
+  }
+  .empty__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+    margin: 0;
+  }
+  .empty__body {
+    color: var(--c-ink-faint);
+    max-width: 52ch;
+    line-height: 1.9;
+  }
+  .listing__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--c-line);
+  }
+  .listing__row {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.5rem 1.5rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .listing__num {
+    color: var(--c-ink-faint);
+  }
+  .listing__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.8rem, 1.2rem + 3vw, 3.4rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .listing__row:hover .listing__title {
+    color: var(--c-accent);
+  }
+  .listing__sub {
+    display: block;
+    color: var(--c-ink-dim);
+    margin-top: 0.6rem;
+  }
+  .listing__meta {
+    display: block;
+    margin-top: 0.8rem;
+    color: var(--c-ink-faint);
+  }
+</style>

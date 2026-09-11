@@ -1,0 +1,47 @@
+---
+# GATE 07 — the publishable page, scaffolded by /apercu-publish.
+# Rename the folder to episodes/<slug>/ and set draft: false to publish.
+title: 'Episodentitel'
+subtitle: 'Ein Untertitel, der die Frage der Episode stellt.'
+description: 'Kurzbeschreibung für Suchmaschinen und Vorschaukarten (max. 200 Zeichen).'
+lang: 'de'
+publishedAt: 2026-01-01
+authors:
+  - 'Apercu association'
+topics:
+  - 'Technologie'
+draft: true
+illustrative: false
+# Media in /public/episodes/<slug>/ — added at gates 05/08:
+# poster: '/episodes/<slug>/poster.png'
+# videoWebm: '/episodes/<slug>/episode.webm'
+# captions: '/episodes/<slug>/captions.vtt'
+# durationSeconds: 150
+# riveSrc: '/episodes/<slug>/emil.riv'
+# riveStateMachine: 'State Machine 1'
+---
+
+import { StoryText, PullQuote, SourceNote } from '@/components/story';
+import ScrollScene from '@/components/story/ScrollScene.astro';
+
+{/* The film plays from the frontmatter media (via EpisodePlayer in the route). */}
+{/* Below the film: the reading layer, where Emil stays alive between the beats. */}
+
+<StoryText lead>
+Der einleitende Absatz, der die Episode in Worten rahmt.
+</StoryText>
+
+<ScrollScene state="walk">
+Emil geht auf das Schloss zu. (Beim Scrollen wechselt die interaktive Figur in den
+Zustand `walk` — siehe scroll-map.json.)
+</ScrollScene>
+
+<ScrollScene state="shocked">
+Die Enthüllung. Emil erstarrt.
+</ScrollScene>
+
+<PullQuote cite="Quelle">Ein Satz, der bleibt.</PullQuote>
+
+<SourceNote id="01">
+Quellenangabe — oder als illustrativ markiert lassen, bis recherchiert.
+</SourceNote>

@@ -1,0 +1,28 @@
+{
+  "$comment": "GATE 03 — Moho scene manifest produced by /apercu-storyboard. One entry per shot; the animator builds these in Moho. Camera tokens: WIDE MED CLOSE INSERT PAN-L PAN-R PUSH CARD.",
+  "slug": "<slug>",
+  "fps": 24,
+  "feel": "animate-on-2s",
+  "scenes": [
+    {
+      "id": "01",
+      "location": "<location-slug>",
+      "register": "poor",
+      "camera": "WIDE",
+      "backgrounds": ["village-plate-a"],
+      "characters": ["emil"],
+      "action": "Establish. Emil small in empty frame.",
+      "holdFrames": 4
+    },
+    {
+      "id": "02",
+      "location": "<location-slug>",
+      "register": "rich",
+      "camera": "PUSH",
+      "backgrounds": ["hall-plate-a"],
+      "characters": ["emil", "crown"],
+      "action": "Slow push down the banquet table.",
+      "holdFrames": 2
+    }
+  ]
+}

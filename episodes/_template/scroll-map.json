@@ -1,0 +1,12 @@
+{
+  "$comment": "GATE 06 — maps story scroll positions to Emil's web states, produced by /apercu-rive. State names must match content-bible/characters/emil.md. Consumed by <ScrollScene state=\"...\"> in episode.mdx.",
+  "slug": "<slug>",
+  "riveSrc": "/episodes/<slug>/emil.riv",
+  "stateMachine": "State Machine 1",
+  "scenes": [
+    { "anchor": "intro", "state": "idle" },
+    { "anchor": "approach", "state": "walk" },
+    { "anchor": "reveal", "state": "shocked" },
+    { "anchor": "outro", "state": "sad" }
+  ]
+}
