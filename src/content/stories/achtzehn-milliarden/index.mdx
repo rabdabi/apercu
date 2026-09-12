@@ -11,7 +11,7 @@ topics:
   - 'Arbeit'
   - 'Ökonomie'
 featured: true
-illustrative: true
+illustrative: false
 heroAlt: 'Konzentrische Kreise, die ein Zentrum umlaufen — ein System, das sich um einen einzigen Punkt ordnet.'
 ---
 
@@ -46,9 +46,10 @@ wir sie glauben.
 </StoryText>
 
 <SideNote label="Zur Einordnung">
-Sämtliche Zahlen in diesem Beitrag sind **illustrative Platzhalter**. Sie zeigen die
-Erzählstruktur der Plattform, nicht recherchierte Fakten. Reale, belegte Werte werden
-später in die markierten Quellen-Slots eingesetzt.
+Die Zahlen in diesem Beitrag sind **belegt und verlinkt** (siehe Quellen). „Achtzehn
+Milliarden“ ist die gerundete Zahl, die kursiert — dokumentiert sind etwa 14,3 Mrd. $
+für Scale AI. Einzelne Gehaltsangaben sind **berichtet und teils von Meta bestritten**
+und als solche gekennzeichnet. Die Bildkompositionen sind generierte Platzhalter.
 </SideNote>
 
 <ChapterIntro number={1} title="Der Preis eines Musters" />
@@ -62,7 +63,7 @@ die sich in keiner Bilanz sauber verbuchen lässt.
 Genau hier beginnt die Verschiebung. Die Arbeit, die ein solches System **baut**, und
 die Arbeit, die es **vermisst**, driften im Preis immer weiter auseinander.
 
-<PullQuote cite="Illustratives Zitat, Platzhalter">
+<PullQuote>
 Wir haben gelernt, Aufmerksamkeit zu messen. Was wir verlernt haben, ist, Arbeit zu
 bewerten, die sich nicht messen lässt.
 </PullQuote>
@@ -81,22 +82,22 @@ Um die Distanz greifbar zu machen, hilft ein Vergleich zwischen dem, was an der 
 gezahlt wird, und dem, was in der Breite verdient wird. Die folgenden Werte sind
 bewusst als Platzhalter gesetzt.
 
-<StatRow label="Illustrative Grössenordnungen">
-  <StatBlock value={18} suffix=" Mrd." prefix="$" label="kolportierte Summe, um Schlüsselpersonen und Rechenkapazität zu binden" source="SOURCE_01" />
-  <StatBlock value={11000} suffix="×" label="illustratives Verhältnis zwischen Spitzenpaket und globalem Medianlohn" source="SOURCE_02" />
-  <StatBlock value={73} suffix="%" label="Anteil der Befragten, die den Systemen mehr Einfluss zutrauen als sich selbst" source="SOURCE_03" />
+<StatRow label="Belegte Grössenordnungen">
+  <StatBlock value={14.3} decimals={1} prefix="$" suffix=" Mrd." label="Metas Investition in Scale AI (Juni 2025) — rund 49 % der Anteile, samt Wechsel von Gründer Alexandr Wang in ein neues „Superintelligence“-Labor" source="SOURCE_01" />
+  <StatBlock value={300} prefix="$" suffix=" Mio." label="berichtetes Spitzenpaket für einzelne KI-Forschende über vier Jahre; der „100-Mio.-Signing-Bonus“ blieb aber bestritten" source="SOURCE_02" />
+  <StatBlock value={1.5} decimals={1} prefix="$" suffix=" Mrd." label="berichtetes Sechs-Jahres-Angebot an einen einzelnen Forscher (abgelehnt) — Meta nennt die Zahl „ungenau“" source="SOURCE_03" />
 </StatRow>
 
-<SourceNote id="01">
-Platzhalter für die belegte Quelle zur genannten Investitionssumme.
+<SourceNote id="01" href="https://www.cnbc.com/2025/06/12/scale-ai-founder-wang-announces-exit-for-meta-part-of-14-billion-deal.html" publisher="CNBC, 12.06.2025">
+Meta investiert 14,3 Mrd. $ in Scale AI (rund 49 % der Anteile) und holt Gründer Alexandr Wang in ein neues Labor für „Superintelligenz“.
 </SourceNote>
 
-<SourceNote id="02">
-Platzhalter für die Berechnungsgrundlage des Gehaltsverhältnisses.
+<SourceNote id="02" href="https://techcrunch.com/2025/06/27/meta-is-offering-multimillion-dollar-pay-for-ai-researchers-but-not-100m-signing-bonuses/" publisher="TechCrunch, 27.06.2025">
+Meta bietet Spitzenkräften Pakete von bis zu rund 300 Mio. $ über vier Jahre; der von Sam Altman genannte „100-Mio.-$-Signing-Bonus“ ist so nicht belegt.
 </SourceNote>
 
-<SourceNote id="03">
-Platzhalter für die zitierte Umfrage.
+<SourceNote id="03" href="https://gulfnews.com/technology/who-is-andrew-tulloch-meet-the-man-who-rejected-marck-zuckerbergs-15b-job-offer-1.500223824" publisher="Gulf News (nach WSJ), 2025">
+Zuckerberg soll Andrew Tulloch (Thinking Machines Lab) ein Sechs-Jahres-Paket von 1,5 Mrd. $ angeboten haben; er lehnte ab. Meta bezeichnet die Zahl als „ungenau“.
 </SourceNote>
 
 <MediaCollage
@@ -154,12 +155,12 @@ Verhandlungsmacht über ihren Preis.
 <ChapterIntro number={5} title="Chronologie einer Verschiebung" />
 
 <Timeline
-  label="Illustrative Chronologie"
+  label="Chronologie"
   items={[
-    { date: '2012', title: 'Die Fläche entsteht', body: 'Plattformen beginnen, Aufmerksamkeit in Echtzeit zu messen.' },
-    { date: '2016', title: 'Das Muster verkauft sich', body: 'Vorhersage wird zum Produkt, nicht mehr nur zum Werkzeug.' },
-    { date: '2020', title: 'Die Knappheit', body: 'Wer Modelle bauen kann, wird zur seltensten Ressource der Branche.' },
-    { date: '2026', title: 'Der Preis wird sichtbar', body: 'Die Summen, die zur Bindung dieser Menschen genannt werden, sprengen die Vorstellung.' },
+    { date: 'ab 2012', title: 'Die Fläche entsteht', body: 'Plattformen messen Aufmerksamkeit in Echtzeit — und lernen aus ihr.' },
+    { date: '2023', title: 'Das Muster wird Massenware', body: 'Generative Modelle machen Vorhersage zum Produkt, nicht mehr nur zum Werkzeug.' },
+    { date: 'Juni 2025', title: 'Der Kauf', body: 'Meta investiert 14,3 Mrd. $ in Scale AI und holt Alexandr Wang in ein „Superintelligence“-Labor.' },
+    { date: 'Sommer 2025', title: 'Das Wettbieten', body: 'Um einzelne Forschende entstehen Angebote bis in Milliardenhöhe — manche öffentlich bestritten.' },
   ]}
 />
 
