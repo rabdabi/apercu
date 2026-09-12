@@ -98,7 +98,7 @@ Copy `.env.example` to `.env`. Keys:
 | `PORT`            | no       | Dev default 4321. **In production the platform injects it.** |
 | `DATABASE_URL`    | no       | `mysql://user:pass@host:port/db`. Enables persistence.       |
 
-\* Defaults to `https://apercu.org` at build time; override per environment.
+\* Defaults to `https://apercu.tech` at build time; override per environment.
 
 ## Database setup
 

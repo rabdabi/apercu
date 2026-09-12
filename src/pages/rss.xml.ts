@@ -6,7 +6,7 @@ export const prerender = true;
 
 export const GET: APIRoute = async (context) => {
   const stories = await getPublishedStories();
-  const site = context.site ?? new URL('https://apercu.org');
+  const site = context.site ?? new URL('https://apercu.tech');
 
   return rss({
     title: 'Aperçu',
