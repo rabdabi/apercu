@@ -1,6 +1,6 @@
 # Aperçu — project status & handoff
 
-_Last updated: 2026-09-11. Read this first to resume cold._
+_Last updated: 2026-09-12. Read this first to resume cold._
 
 **Repo:** https://github.com/rabdabi/apercu (private, branch `main`, fully pushed)
 **Production domain (target):** https://apercu.org — not yet deployed.
@@ -33,6 +33,8 @@ pipeline for a recurring 2D animated world (character **Emil**).
 - Paper-white + cinematic **design do-over**: `CinematicChapter`, `RevealText`,
   `AmbientClip` (generated canvas until real footage), `Motif`, `MediaMask`,
   `MediaMosaic`, `MediaCollage`, `FilmPlayer`. Homepage + demo story fully art-directed.
+  All pages unified via `MetaRule` header signature; About has a cinematic beat; 404
+  verified on paper.
 - **Aperçu Motion:** `content-bible/` (Emil + world canon), `episodes/` collection +
   `_template`, `plugins/apercu-studio/` skills (`/apercu-story`, `-canon`, `-storyboard`,
   `-modelsheet`, `-rive`, `-publish`, `-captions`). See
