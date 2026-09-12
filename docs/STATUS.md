@@ -50,8 +50,9 @@ pipeline for a recurring 2D animated world (character **Emil**).
    Infomaniak's deploy key or make repo public. Steps: [`docs/DEPLOY-INFOMANIAK.md`](DEPLOY-INFOMANIAK.md).
 2. Optional: flip repo public (one command) for the Git connection; add a GitHub Actions
    deploy once the deploy key exists.
-3. Content: replace the *illustrative* figures in `achtzehn-milliarden` with sourced
-   numbers (SourceNote slots are wired); real photography/film swaps into media `src`.
+3. ~~Source the `achtzehn-milliarden` figures~~ **DONE** — now real & cited (CNBC,
+   TechCrunch, WSJ/Gulf News). Remaining: swap generated visuals for real
+   photography/film via media `src` when available.
 4. Real Emil: run `/apercu-modelsheet` → model sheet; drop a `.riv` at
    `public/episodes/<slug>/emil.riv` to activate the living character.
 5. Later phases: community/auth, the agentic Aperçu (Phase 2 doc).
