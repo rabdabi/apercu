@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import MetaRule from '@/components/core/MetaRule.astro';
 import { getPublishedStories, getTopics, estimateReadingMinutes } from '@/lib/stories';
 import { formatDateShort, readingClock, pad } from '@/lib/format';
 
@@ -15,7 +16,7 @@ const slugOf = (id: string) => id.replace(/\/index$/, '');
   description="Das vollständige Register aller Aperçu-Geschichten — chronologisch, mit Metadaten."
 >
   <section class="grid-editorial head">
-    <p class="mono head__kicker">REGISTER / 0001</p>
+    <MetaRule label="REGISTER / 0001" value={`${pad(stories.length, 4)} EINTRÄGE`} />
     <h1 class="head__title">Index</h1>
     <p class="head__lead mono">STATUS / PUBLISHED · EINTRÄGE / {pad(stories.length, 4)}</p>
   </section>

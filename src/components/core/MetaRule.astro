@@ -1,0 +1,41 @@
+---
+/**
+ * Editorial metadata rule: `[ LABEL ] ——————————— VALUE`. The recurring page-header
+ * signature (Anveril precision × Studio Loop). Spans the full editorial grid; place
+ * as the first child of a `.grid-editorial` header.
+ */
+export interface Props {
+  label: string;
+  value?: string;
+}
+const { label, value } = Astro.props;
+---
+
+<p class="metarule mono">
+  <span class="metarule__label">[ {label} ]</span>
+  <span class="metarule__rule" aria-hidden="true"></span>
+  {value && <span class="metarule__value">{value}</span>}
+</p>
+
+<style>
+  .metarule {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--c-ink-faint);
+    margin: 0;
+  }
+  .metarule__label {
+    color: var(--c-rubric);
+    white-space: nowrap;
+  }
+  .metarule__rule {
+    flex: 1;
+    height: 1px;
+    background: var(--c-line-strong);
+  }
+  .metarule__value {
+    white-space: nowrap;
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import MetaRule from '@/components/core/MetaRule.astro';
 import { isProduction } from '@/lib/env';
 import { formatDate, pad } from '@/lib/format';
 
@@ -20,7 +21,7 @@ const slugOf = (id: string) => id.replace(/\/episode$/, '');
   description="Animierte Episoden von Aperçu — Langform-Geschichten über Macht, Geld und Aufmerksamkeit, in mittelalterlichem Gewand."
 >
   <section class="grid-editorial head">
-    <p class="mono head__kicker">FILME / EPISODEN</p>
+    <MetaRule label="FILME / EPISODEN" value={`${pad(episodes.length, 3)} EINTRÄGE`} />
     <h1 class="head__title">Episoden</h1>
     <p class="head__lead">
       Handgezeichnete Kurzfilme aus der Welt von Emil — und dazwischen bleibt die Figur

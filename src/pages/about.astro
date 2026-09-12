@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContactForm from '@/components/interactive/ContactForm.astro';
+import MetaRule from '@/components/core/MetaRule.astro';
+import CinematicChapter from '@/components/story/CinematicChapter.astro';
 ---
 
 <BaseLayout
@@ -8,7 +10,7 @@ import ContactForm from '@/components/interactive/ContactForm.astro';
   description="Über Aperçu — eine redaktionelle Plattform für Langform-Journalismus über Technologie und Gesellschaft."
 >
   <section class="grid-editorial head">
-    <p class="mono head__kicker">MANIFEST / ÜBER</p>
+    <MetaRule label="MANIFEST / ÜBER" value="ZÜRICH / SCHWEIZ" />
     <h1 class="head__title">Aperçu ist<br />ein langer Blick.</h1>
   </section>
 
@@ -46,6 +48,13 @@ import ContactForm from '@/components/interactive/ContactForm.astro';
       </dl>
     </div>
   </section>
+
+  <CinematicChapter
+    kicker="Haltung"
+    title="Das lange Schauen ist eine Entscheidung."
+    lead="Gegen den Feed, gegen die Kachel, gegen die Überschrift, die alles schon gesagt haben will."
+    variant="film"
+  />
 
   <section class="grid-editorial contact" aria-labelledby="contact-title">
     <div class="contact__col">

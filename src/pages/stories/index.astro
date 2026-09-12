@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import MetaRule from '@/components/core/MetaRule.astro';
 import { getPublishedStories, estimateReadingMinutes } from '@/lib/stories';
 import { formatDate, readingClock, pad } from '@/lib/format';
 
@@ -14,7 +15,7 @@ const slugOf = (id: string) => id.replace(/\/index$/, '');
   description="Alle Langform-Reportagen und Essays von Aperçu."
 >
   <section class="grid-editorial head" aria-labelledby="stories-title">
-    <p class="mono head__kicker">ARCHIV / GESCHICHTEN</p>
+    <MetaRule label="ARCHIV / GESCHICHTEN" value={`${pad(stories.length, 3)} EINTRÄGE`} />
     <h1 id="stories-title" class="head__title">Geschichten</h1>
     <p class="head__lead">
       Langform-Reportagen über Technologie und die Systeme, die unseren Alltag ordnen.
