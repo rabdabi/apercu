@@ -1,0 +1,59 @@
+{
+  "$comment": "GATE 03 — Moho scene manifest for kurzfilm-01-emil-geht. Import as the shot plan. Camera tokens: WIDE MED CLOSE PAN-R CARD. Feel: animate-on-2s, holds 2-4 frames. Export a seamless loop to public/media/emil-geht.webm.",
+  "slug": "kurzfilm-01-emil-geht",
+  "fps": 24,
+  "feel": "animate-on-2s",
+  "durationSeconds": 18,
+  "loop": true,
+  "exportTarget": "public/media/emil-geht.webm",
+  "scenes": [
+    {
+      "id": "01",
+      "register": "poor",
+      "camera": "WIDE",
+      "seconds": 6,
+      "backgrounds": ["village-plate-a"],
+      "characters": ["emil"],
+      "action": "Emil walks left-to-right across the empty village.",
+      "emilState": "walk",
+      "holdFrames": 4
+    },
+    {
+      "id": "02",
+      "register": "poor",
+      "camera": "MED",
+      "seconds": 4,
+      "backgrounds": ["legs-detail"],
+      "characters": ["emil"],
+      "action": "Loopable close on the legs/hem, side-on walk cycle (the core exercise).",
+      "emilState": "walk",
+      "holdFrames": 0
+    },
+    {
+      "id": "03",
+      "register": "poor",
+      "camera": "PAN-R",
+      "seconds": 6,
+      "backgrounds": ["village-plate-a", "castle-silhouette"],
+      "characters": ["emil"],
+      "action": "Slow pan right reveals the huge castle silhouette on the horizon; Emil stays small, lower-left.",
+      "emilState": "walk",
+      "holdFrames": 0
+    },
+    {
+      "id": "04",
+      "register": "poor",
+      "camera": "CLOSE",
+      "seconds": 2,
+      "backgrounds": [],
+      "characters": ["emil"],
+      "action": "Emil stops and looks up; hard cut to a hand-painted title card / black. Final frame matches scene 01 opening for the loop.",
+      "emilState": "look_up",
+      "holdFrames": 3
+    }
+  ],
+  "newAssets": [
+    { "id": "village-plate-a", "register": "poor", "note": "reusable poor-world village plate" },
+    { "id": "castle-silhouette", "register": "rich", "note": "huge symmetric castle on the horizon" }
+  ]
+}
