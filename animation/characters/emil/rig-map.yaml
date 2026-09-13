@@ -1,0 +1,51 @@
+# Emil — Moho rig map (TECHNICAL layer only)
+#
+# This file maps Emil's CANON (content-bible/characters/emil.md) onto a concrete
+# Moho rig. It is NOT a copy of the canon — if this file and emil.md disagree
+# about how Emil looks, emil.md wins and this file is wrong.
+#
+# All Moho-specific values are null/TODO until the master rig actually exists in
+# animation/moho/masters/emil-master.moho. NEVER invent bone/layer IDs here:
+# the skill rediscovers real IDs at runtime via document_getLayers / layer_getBones,
+# because MCP layer/bone IDs are session-scoped.
+
+character_id: CHAR-EMIL-001          # canonical id; see content-bible/characters/emil.md
+canon: content-bible/characters/emil.md
+
+moho_master: animation/moho/masters/emil-master.moho   # created by hand in Moho (does not exist yet)
+version: 0.0.0                        # bump when the master rig changes structurally
+status: TODO-no-rig-yet
+
+# Discovered at runtime — do not hardcode. Listed here only as the expected shape.
+bone_layer: null                      # e.g. name of the bone/skeleton layer, resolved at runtime
+bones:                                # canonical bone NAMES we expect the rig to expose (IDs resolved live)
+  root: null
+  spine: null
+  head: null
+  jaw: null
+  arm_l_upper: null
+  arm_l_lower: null
+  hand_l: null
+  arm_r_upper: null
+  arm_r_lower: null
+  hand_r: null
+  leg_l_upper: null
+  leg_l_lower: null
+  foot_l: null
+  leg_r_upper: null
+  leg_r_lower: null
+  foot_r: null
+
+switch_layers:                        # Moho switch layers for swappable art (mouth, hands, eyes)
+  mouth: null                         # closed / open / wide / consonant (see motion-language.md)
+  hand_l: null                        # open / point / fist / carry / offer / shield / count / hide
+  hand_r: null
+  eyes: null                          # blink + expression set
+
+smart_bones:                          # Smart Bone dials (drive corrective/expression shapes)
+  head_turn: null                     # front <-> 3q <-> side
+  brow_l: null                        # brows do most of the acting
+  brow_r: null
+
+actions:                              # reusable Moho Actions — see actions.yaml for the vocabulary
+  # name: null  (Moho action name/id resolved once the rig exists)

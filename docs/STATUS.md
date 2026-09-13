@@ -58,6 +58,11 @@ Powered by **Aperçu Motion** — a semi-automated pipeline for the animated wor
   from the **same `emil:state` event** that `ScrollScene` dispatches and `RiveCharacter`
   consumes — so the scroll wiring is identical to the real Rive rig (only the figure swaps
   later). Reduced-motion → static idle. Homepage sections tagged idle→look_up→shocked→wave.
+- **Pointer interactions (cursor-follow / hover / click) → Rive, via a ready-to-run prompt:**
+  `docs/prompts/emil-rive-cli.md` is a self-contained brief to paste into a new session —
+  it builds Emil's `.riv` with the **Rive CLI + RML** (eyes follow cursor, hover + click
+  reactions), then wires it in (`public/media/emil.riv`, enhance `RiveCharacter.tsx` to feed
+  `pointerX/Y`, swap the homepage). Runs against the existing `state` / `emil:state` contract.
 - Verified each pass: `astro check` 0 errors, production build green.
 
 ## Next (pick up here)

@@ -1,0 +1,10 @@
+# <CHARACTER> — reusable Moho Actions. Timing obeys
+# content-bible/world/motion-language.md (on 2s, holds, deliberate stillness).
+character_id: CHAR-XXXX-001
+status: TODO-no-rig-yet
+fps: 24
+feel: animate-on-2s
+actions:
+  idle: { moho_action: null }
+  walk: { moho_action: null }
+  # add the reusable movements this character needs
