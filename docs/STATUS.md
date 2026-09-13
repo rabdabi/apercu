@@ -47,6 +47,12 @@ Powered by **Aperçu Motion** — a semi-automated pipeline for the animated wor
   brief at `content-bible/characters/emil/modelsheet-brief.md`; visible SVG stand-in
   `src/components/story/EmilFigure.astro` (also in the Rive placeholder). Asset swap
   paths in `docs/media-manifest.md`.
+- **Movie plan pre-produced (text/specs; hands-on animation is yours):** method decided —
+  **hand-directed Rive + Moho, solo, smallest-first**. Phase 0 Emil
+  `content-bible/characters/emil/modelsheet-brief.md`; Phase 1 `…/rive-build-guide.md`;
+  Phase 2 first short (gates 01–04) `episodes/kurzfilm-01-emil-geht/`; Phase 3 flagship
+  film script (gates 01–02) `episodes/achtzehn-milliarden/`. **Next real progress is
+  yours: Phase 0** (generate Emil's frames). Nothing more to pre-produce until then.
 - Verified each pass: `astro check` 0 errors, production build green.
 
 ## Next (pick up here)
