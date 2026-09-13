@@ -1,22 +1,25 @@
 ---
 /**
  * EMIL — generated-SVG stand-in for the recurring character, matching
- * content-bible/characters/emil.md (4.5-heads short, egg head, rust bowl cut,
- * almond eyes, soft nose bulb, wide-collar oat tunic). Palette from world/palette.md.
- * A placeholder until the real Rive rig / Moho art lands; swappable per emil.md.
+ * content-bible/characters/emil.md. Palette from world/palette.md.
  *
- * `pose`: idle | wave | point | shocked. Static + reduced-motion safe; the optional
- * subtle idle sway is CSS and disabled under prefers-reduced-motion.
+ * Runtime-reactive: renders every pose layer and shows the active one via the
+ * root `data-pose` attribute. With `reactive`, an inline script listens for the
+ * same `emil:state` event that ScrollScene dispatches and RiveCharacter consumes
+ * — so the scroll wiring is identical to the real Rive rig (only the figure
+ * swaps later). Static + reduced-motion safe: no micro-motion, no pose switching.
+ *
+ * `pose`: idle | walk | wave | point | shocked | look_up.
  */
 export interface Props {
-  pose?: 'idle' | 'wave' | 'point' | 'shocked';
+  pose?: 'idle' | 'walk' | 'wave' | 'point' | 'shocked' | 'look_up';
+  reactive?: boolean;
   sway?: boolean;
   size?: number;
   class?: string;
 }
-const { pose = 'idle', sway = false, size = 200, class: className = '' } = Astro.props;
-const shocked = pose === 'shocked';
-const label = `Emil (${pose}, Platzhalter)`;
+const { pose = 'idle', reactive = false, sway = false, size = 200, class: className = '' } =
+  Astro.props;
 ---
 
 <svg
@@ -24,97 +27,104 @@ const label = `Emil (${pose}, Platzhalter)`;
   width={size}
   viewBox="0 0 120 190"
   role="img"
-  aria-label={label}
+  aria-label="Emil (Platzhalter-Figur)"
+  data-pose={pose}
+  data-emil-reactive={reactive ? '' : undefined}
   xmlns="http://www.w3.org/2000/svg"
 >
-  <g stroke="#241f1a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-    <!-- legs / hose -->
+  <g class="emil__body" stroke="#241f1a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- legs / hose + shoes -->
     <path d="M50 150 L48 178 L58 178 L60 150 Z" fill="#6f7466" />
     <path d="M60 150 L62 178 L72 178 L70 150 Z" fill="#6f7466" />
-    <!-- shoes -->
     <path d="M45 178 q-2 6 8 6 h6 v-6 Z" fill="#b07a4f" />
     <path d="M61 178 v6 h6 q10 0 8 -6 Z" fill="#b07a4f" />
 
-    <!-- tunic (bell, slightly crooked) -->
+    <!-- tunic + waist cord -->
     <path d="M42 58 L36 152 L84 152 L79 58 Z" fill="#d9ccaa" />
-    <!-- over-tunic hem shadow -->
     <path d="M39 118 L83 118" fill="none" stroke="#b07a4f" stroke-width="1.5" />
-    <!-- waist cord -->
     <path d="M40 108 q20 6 40 0" fill="none" stroke="#b07a4f" stroke-width="3" />
 
-    <!-- arms (pose-dependent) -->
-    {pose === 'idle' && (
-      <>
-        <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <path d="M76 60 L83 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <circle cx="37" cy="108" r="6" fill="#b07a4f" />
-        <circle cx="84" cy="108" r="6" fill="#b07a4f" />
-      </>
-    )}
-    {pose === 'wave' && (
-      <>
-        <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <path d="M76 60 L92 30" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <circle cx="37" cy="108" r="6" fill="#b07a4f" />
-        <circle cx="94" cy="26" r="6.5" fill="#b07a4f" />
-      </>
-    )}
-    {pose === 'point' && (
-      <>
-        <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <path d="M76 62 L104 60" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <circle cx="106" cy="60" r="6" fill="#b07a4f" />
-        <path d="M110 60 h6" stroke="#b07a4f" stroke-width="3" />
-      </>
-    )}
-    {shocked && (
-      <>
-        <path d="M45 60 L34 40" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <path d="M76 60 L86 40" fill="none" stroke-width="6" stroke="#d9ccaa" />
-        <circle cx="32" cy="36" r="6" fill="#b07a4f" />
-        <circle cx="88" cy="36" r="6" fill="#b07a4f" />
-      </>
-    )}
+    <!-- ARMS (one group shown per pose) -->
+    <g class="emil__arms emil__arms--idle">
+      <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <path d="M76 60 L83 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <circle cx="37" cy="108" r="6" fill="#b07a4f" />
+      <circle cx="84" cy="108" r="6" fill="#b07a4f" />
+    </g>
+    <g class="emil__arms emil__arms--walk">
+      <path d="M45 60 L40 103" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <path d="M76 60 L82 100" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <circle cx="39" cy="107" r="6" fill="#b07a4f" />
+      <circle cx="83" cy="104" r="6" fill="#b07a4f" />
+    </g>
+    <g class="emil__arms emil__arms--wave">
+      <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <path d="M76 60 L92 30" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <circle cx="37" cy="108" r="6" fill="#b07a4f" />
+      <circle cx="94" cy="26" r="6.5" fill="#b07a4f" />
+    </g>
+    <g class="emil__arms emil__arms--point">
+      <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <path d="M76 62 L104 60" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <circle cx="37" cy="108" r="6" fill="#b07a4f" />
+      <circle cx="106" cy="60" r="6" fill="#b07a4f" />
+    </g>
+    <g class="emil__arms emil__arms--shocked">
+      <path d="M45 60 L34 40" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <path d="M76 60 L86 40" fill="none" stroke-width="6" stroke="#d9ccaa" />
+      <circle cx="32" cy="36" r="6" fill="#b07a4f" />
+      <circle cx="88" cy="36" r="6" fill="#b07a4f" />
+    </g>
 
-    <!-- wide folded collar (silhouette key) -->
+    <!-- collar + neck + head + ears + hair -->
     <path d="M50 56 L60 70 L70 56 L79 60 L60 78 L41 60 Z" fill="#6f7466" />
-
-    <!-- neck -->
     <path d="M54 50 h12 v8 h-12 Z" fill="#b07a4f" stroke="none" />
-
-    <!-- head: egg, wider at jaw -->
     <path d="M60 8 q22 0 22 22 q0 20 -22 24 q-22 -4 -22 -24 q0 -22 22 -22 Z" fill="#b07a4f" />
-
-    <!-- ears -->
     <circle cx="38" cy="34" r="4" fill="#b07a4f" />
     <circle cx="82" cy="34" r="4" fill="#b07a4f" />
-
-    <!-- rust bowl-cut cap (covers the crown, fringe just above the eyes) -->
     <path
       d="M36 32 C36 9 46 4 60 4 C74 4 84 9 84 32 C78 25 70 26 63 28 C61 25 59 25 57 28 C50 26 42 25 36 32 Z"
       fill="#c0562f"
     />
 
-    <!-- eyes: almond, ink -->
-    <path d="M46 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
-    <path d="M64 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
-    <circle cx="51" cy="34" r={shocked ? 2.4 : 1.6} fill="#241f1a" stroke="none" />
-    <circle cx="69" cy="34" r={shocked ? 2.4 : 1.6} fill="#241f1a" stroke="none" />
-
-    <!-- eyebrows: two short strokes (raised when shocked) -->
-    <path d={shocked ? 'M45 26 l10 -1' : 'M45 28 l10 1'} stroke-width="1.8" />
-    <path d={shocked ? 'M65 25 l10 1' : 'M65 29 l10 -1'} stroke-width="1.8" />
-
-    <!-- nose: single curved line + bulb -->
+    <!-- nose (shared) -->
     <path d="M60 36 q-3 5 0 8" fill="none" stroke-width="1.8" />
     <circle cx="60" cy="45" r="2.2" fill="#a06a45" stroke="none" />
 
-    <!-- mouth: simple shape -->
-    {shocked ? (
-      <ellipse cx="60" cy="50" rx="3.5" ry="4.5" fill="#5a3a2a" />
-    ) : (
+    <!-- FACE (one group shown per pose) -->
+    <g class="emil__face emil__face--neutral">
+      <path d="M46 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+      <path d="M64 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+      <circle cx="51" cy="34" r="1.6" fill="#241f1a" stroke="none" />
+      <circle cx="69" cy="34" r="1.6" fill="#241f1a" stroke="none" />
+      <path d="M45 28 l10 1" stroke-width="1.8" />
+      <path d="M65 29 l10 -1" stroke-width="1.8" />
       <path d="M55 50 q5 3 10 0" fill="none" stroke-width="1.8" />
-    )}
+    </g>
+    <g class="emil__face emil__face--lookup">
+      <path d="M46 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+      <path d="M64 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+      <circle cx="51" cy="31.5" r="1.6" fill="#241f1a" stroke="none" />
+      <circle cx="69" cy="31.5" r="1.6" fill="#241f1a" stroke="none" />
+      <path d="M45 27 l10 0" stroke-width="1.8" />
+      <path d="M65 27 l10 0" stroke-width="1.8" />
+      <path d="M56 50 h8" fill="none" stroke-width="1.8" />
+    </g>
+    <g class="emil__face emil__face--shocked">
+      <path d="M46 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+      <path d="M64 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+      <circle cx="51" cy="34" r="2.4" fill="#241f1a" stroke="none" />
+      <circle cx="69" cy="34" r="2.4" fill="#241f1a" stroke="none" />
+      <path d="M45 26 l10 -1" stroke-width="1.8" />
+      <path d="M65 25 l10 1" stroke-width="1.8" />
+      <ellipse cx="60" cy="50" rx="3.5" ry="4.5" fill="#5a3a2a" stroke="none" />
+    </g>
+
+    <!-- blink eyelids (skin) -->
+    <g class="emil__blink">
+      <rect x="45" y="29" width="12" height="7" fill="#b07a4f" stroke="none" />
+      <rect x="63" y="29" width="12" height="7" fill="#b07a4f" stroke="none" />
+    </g>
   </g>
 </svg>
 
@@ -124,12 +134,50 @@ const label = `Emil (${pose}, Platzhalter)`;
     height: auto;
     max-width: 100%;
   }
+
+  /* Show exactly one arm group + one face group per pose. */
+  .emil__arms,
+  .emil__face {
+    display: none;
+  }
+  .emil[data-pose='idle'] .emil__arms--idle,
+  .emil[data-pose='look_up'] .emil__arms--idle,
+  .emil[data-pose='walk'] .emil__arms--walk,
+  .emil[data-pose='wave'] .emil__arms--wave,
+  .emil[data-pose='point'] .emil__arms--point,
+  .emil[data-pose='shocked'] .emil__arms--shocked {
+    display: block;
+  }
+  .emil[data-pose='shocked'] .emil__face--shocked,
+  .emil[data-pose='look_up'] .emil__face--lookup {
+    display: block;
+  }
+  .emil:not([data-pose='shocked']):not([data-pose='look_up']) .emil__face--neutral {
+    display: block;
+  }
+
+  /* Blink lids sit open (scaled away) until the blink keyframe. */
+  .emil__blink rect {
+    transform-box: fill-box;
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .emil--sway {
       transform-origin: 60px 178px;
       animation: emil-sway 5s var(--ease-out) infinite;
     }
+    .emil__body {
+      transform-box: fill-box;
+      transform-origin: center bottom;
+      animation: emil-breathe 4.5s ease-in-out infinite;
+    }
+    .emil__blink rect {
+      animation: emil-blink 6s steps(1, end) infinite;
+    }
   }
+
   @keyframes emil-sway {
     0%,
     100% {
@@ -139,4 +187,53 @@ const label = `Emil (${pose}, Platzhalter)`;
       transform: rotate(1.2deg);
     }
   }
+  @keyframes emil-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.015);
+    }
+  }
+  @keyframes emil-blink {
+    0%,
+    93%,
+    100% {
+      transform: scaleY(0);
+    }
+    95%,
+    97% {
+      transform: scaleY(1);
+    }
+  }
 </style>
+
+<script>
+  // Reactive Emil: switch pose from the shared `emil:state` event (ScrollScene
+  // dispatches it; RiveCharacter consumes the same one). Static under reduced motion.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const figures = Array.from(document.querySelectorAll<SVGElement>('[data-emil-reactive]'));
+
+  if (figures.length && !reduce) {
+    const SUPPORTED = new Set(['idle', 'walk', 'wave', 'point', 'shocked', 'look_up']);
+    // Map the full Rive state list down to the stand-in's available poses.
+    const MAP: Record<string, string> = {
+      run: 'walk',
+      sit: 'idle',
+      sleep: 'idle',
+      angry: 'shocked',
+      confused: 'look_up',
+      sad: 'idle',
+      laugh: 'wave',
+    };
+    const resolve = (s: string) => (SUPPORTED.has(s) ? s : (MAP[s] ?? 'idle'));
+
+    window.addEventListener('emil:state', (e) => {
+      const name = (e as CustomEvent<string>).detail;
+      if (!name) return;
+      const pose = resolve(name);
+      figures.forEach((f) => f.setAttribute('data-pose', pose));
+    });
+  }
+</script>

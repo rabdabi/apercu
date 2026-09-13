@@ -6,6 +6,7 @@ import FilmPlayer from '@/components/media/FilmPlayer.astro';
 import EmilFigure from '@/components/story/EmilFigure.astro';
 import MetaRule from '@/components/core/MetaRule.astro';
 import Motif from '@/components/story/Motif.astro';
+import ScrollScene from '@/components/story/ScrollScene.astro';
 import { getFeaturedStory } from '@/lib/stories';
 import { isProduction } from '@/lib/env';
 import { formatDate, pad } from '@/lib/format';
@@ -26,7 +27,7 @@ const filmCount = episodes.length + (featured ? 1 : 0);
   description="Aperçu erzählt in kurzen animierten Filmen von Macht, Geld und Aufmerksamkeit — mit einer wiederkehrenden Figur, Emil. Die Recherchen dazu leben in den Perspektiven."
 >
   <!-- ── Hero: what's going on + the animated character ─────────────────── -->
-  <section class="hero" aria-label="Aperçu">
+  <section class="hero" aria-label="Aperçu" data-emil-state="idle">
     <div class="grid-editorial hero__grid">
       <MetaRule label="APERÇU — BEWEGTE ESSAYS" value={formatDate(new Date())} />
 
@@ -43,7 +44,7 @@ const filmCount = episodes.length + (featured ? 1 : 0);
       </div>
 
       <figure class="hero__emil">
-        <EmilFigure pose="idle" sway size={300} />
+        <EmilFigure pose="idle" reactive sway size={300} />
         <figcaption class="mono hero__emil-cap">EMIL · PROTAGONIST · PLATZHALTER</figcaption>
       </figure>
     </div>
@@ -54,19 +55,21 @@ const filmCount = episodes.length + (featured ? 1 : 0);
   </section>
 
   <!-- ── The premise, as a film moment ──────────────────────────────────── -->
-  <CinematicChapter
-    id="worum-es-geht"
-    kicker="Worum es geht"
-    title="Emil steht am Rand der Macht — und sieht, was niemand sehen soll."
-    lead="Eine Welt, in der Reichtum nicht die Kleider ändert, sondern das Bild selbst."
-    variant="film"
-  >
-    Arme Welt: rohe Tinte, leerer Raum, zwei Farben. Reiche Welt: Gold, Ornament,
-    Symmetrie. Dieselbe Figur, dasselbe Universum — nur anders gezeichnet.
-  </CinematicChapter>
+  <ScrollScene state="look_up">
+    <CinematicChapter
+      id="worum-es-geht"
+      kicker="Worum es geht"
+      title="Emil steht am Rand der Macht — und sieht, was niemand sehen soll."
+      lead="Eine Welt, in der Reichtum nicht die Kleider ändert, sondern das Bild selbst."
+      variant="film"
+    >
+      Arme Welt: rohe Tinte, leerer Raum, zwei Farben. Reiche Welt: Gold, Ornament,
+      Symmetrie. Dieselbe Figur, dasselbe Universum — nur anders gezeichnet.
+    </CinematicChapter>
+  </ScrollScene>
 
   <!-- ── The films (the character's animated videos) ────────────────────── -->
-  <section class="films grid-editorial" aria-labelledby="films-title">
+  <section class="films grid-editorial" aria-labelledby="films-title" data-emil-state="shocked">
     <MetaRule label="DIE FILME" value={`${pad(filmCount, 3)} · IN PRODUKTION`} />
     <h2 id="films-title" class="films__title">Die Filme</h2>
 
@@ -109,7 +112,7 @@ const filmCount = episodes.length + (featured ? 1 : 0);
   </section>
 
   <!-- ── Pointer to the journalism track ────────────────────────────────── -->
-  <section class="reading grid-editorial" aria-labelledby="reading-title">
+  <section class="reading grid-editorial" aria-labelledby="reading-title" data-emil-state="wave">
     <div class="reading__motif" aria-hidden="true"><Motif size={80} /></div>
     <h2 id="reading-title" class="reading__title">Lieber lesen?</h2>
     <p class="reading__body">
@@ -176,6 +179,9 @@ const filmCount = episodes.length + (featured ? 1 : 0);
     .hero__emil {
       grid-column: 9 / -1;
       justify-items: end;
+      position: sticky;
+      top: 15vh;
+      align-self: start;
     }
   }
   .hero__emil-cap {
