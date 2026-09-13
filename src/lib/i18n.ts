@@ -10,7 +10,7 @@ export const defaultLocale: Locale = 'de';
 type Dict = Record<string, string>;
 
 const de: Dict = {
-  'nav.stories': 'Geschichten',
+  'nav.stories': 'Perspektiven',
   'nav.index': 'Index',
   'nav.about': 'Über',
   'nav.menu': 'Menü',

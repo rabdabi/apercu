@@ -1,0 +1,142 @@
+---
+/**
+ * EMIL — generated-SVG stand-in for the recurring character, matching
+ * content-bible/characters/emil.md (4.5-heads short, egg head, rust bowl cut,
+ * almond eyes, soft nose bulb, wide-collar oat tunic). Palette from world/palette.md.
+ * A placeholder until the real Rive rig / Moho art lands; swappable per emil.md.
+ *
+ * `pose`: idle | wave | point | shocked. Static + reduced-motion safe; the optional
+ * subtle idle sway is CSS and disabled under prefers-reduced-motion.
+ */
+export interface Props {
+  pose?: 'idle' | 'wave' | 'point' | 'shocked';
+  sway?: boolean;
+  size?: number;
+  class?: string;
+}
+const { pose = 'idle', sway = false, size = 200, class: className = '' } = Astro.props;
+const shocked = pose === 'shocked';
+const label = `Emil (${pose}, Platzhalter)`;
+---
+
+<svg
+  class:list={['emil', { 'emil--sway': sway }, className]}
+  width={size}
+  viewBox="0 0 120 190"
+  role="img"
+  aria-label={label}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g stroke="#241f1a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- legs / hose -->
+    <path d="M50 150 L48 178 L58 178 L60 150 Z" fill="#6f7466" />
+    <path d="M60 150 L62 178 L72 178 L70 150 Z" fill="#6f7466" />
+    <!-- shoes -->
+    <path d="M45 178 q-2 6 8 6 h6 v-6 Z" fill="#b07a4f" />
+    <path d="M61 178 v6 h6 q10 0 8 -6 Z" fill="#b07a4f" />
+
+    <!-- tunic (bell, slightly crooked) -->
+    <path d="M42 58 L36 152 L84 152 L79 58 Z" fill="#d9ccaa" />
+    <!-- over-tunic hem shadow -->
+    <path d="M39 118 L83 118" fill="none" stroke="#b07a4f" stroke-width="1.5" />
+    <!-- waist cord -->
+    <path d="M40 108 q20 6 40 0" fill="none" stroke="#b07a4f" stroke-width="3" />
+
+    <!-- arms (pose-dependent) -->
+    {pose === 'idle' && (
+      <>
+        <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <path d="M76 60 L83 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <circle cx="37" cy="108" r="6" fill="#b07a4f" />
+        <circle cx="84" cy="108" r="6" fill="#b07a4f" />
+      </>
+    )}
+    {pose === 'wave' && (
+      <>
+        <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <path d="M76 60 L92 30" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <circle cx="37" cy="108" r="6" fill="#b07a4f" />
+        <circle cx="94" cy="26" r="6.5" fill="#b07a4f" />
+      </>
+    )}
+    {pose === 'point' && (
+      <>
+        <path d="M45 60 L38 104" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <path d="M76 62 L104 60" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <circle cx="106" cy="60" r="6" fill="#b07a4f" />
+        <path d="M110 60 h6" stroke="#b07a4f" stroke-width="3" />
+      </>
+    )}
+    {shocked && (
+      <>
+        <path d="M45 60 L34 40" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <path d="M76 60 L86 40" fill="none" stroke-width="6" stroke="#d9ccaa" />
+        <circle cx="32" cy="36" r="6" fill="#b07a4f" />
+        <circle cx="88" cy="36" r="6" fill="#b07a4f" />
+      </>
+    )}
+
+    <!-- wide folded collar (silhouette key) -->
+    <path d="M50 56 L60 70 L70 56 L79 60 L60 78 L41 60 Z" fill="#6f7466" />
+
+    <!-- neck -->
+    <path d="M54 50 h12 v8 h-12 Z" fill="#b07a4f" stroke="none" />
+
+    <!-- head: egg, wider at jaw -->
+    <path d="M60 8 q22 0 22 22 q0 20 -22 24 q-22 -4 -22 -24 q0 -22 22 -22 Z" fill="#b07a4f" />
+
+    <!-- ears -->
+    <circle cx="38" cy="34" r="4" fill="#b07a4f" />
+    <circle cx="82" cy="34" r="4" fill="#b07a4f" />
+
+    <!-- rust bowl-cut cap (covers the crown, fringe just above the eyes) -->
+    <path
+      d="M36 32 C36 9 46 4 60 4 C74 4 84 9 84 32 C78 25 70 26 63 28 C61 25 59 25 57 28 C50 26 42 25 36 32 Z"
+      fill="#c0562f"
+    />
+
+    <!-- eyes: almond, ink -->
+    <path d="M46 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+    <path d="M64 34 q5 -4 10 0 q-5 4 -10 0 Z" fill="#f4efe2" />
+    <circle cx="51" cy="34" r={shocked ? 2.4 : 1.6} fill="#241f1a" stroke="none" />
+    <circle cx="69" cy="34" r={shocked ? 2.4 : 1.6} fill="#241f1a" stroke="none" />
+
+    <!-- eyebrows: two short strokes (raised when shocked) -->
+    <path d={shocked ? 'M45 26 l10 -1' : 'M45 28 l10 1'} stroke-width="1.8" />
+    <path d={shocked ? 'M65 25 l10 1' : 'M65 29 l10 -1'} stroke-width="1.8" />
+
+    <!-- nose: single curved line + bulb -->
+    <path d="M60 36 q-3 5 0 8" fill="none" stroke-width="1.8" />
+    <circle cx="60" cy="45" r="2.2" fill="#a06a45" stroke="none" />
+
+    <!-- mouth: simple shape -->
+    {shocked ? (
+      <ellipse cx="60" cy="50" rx="3.5" ry="4.5" fill="#5a3a2a" />
+    ) : (
+      <path d="M55 50 q5 3 10 0" fill="none" stroke-width="1.8" />
+    )}
+  </g>
+</svg>
+
+<style>
+  .emil {
+    display: block;
+    height: auto;
+    max-width: 100%;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .emil--sway {
+      transform-origin: 60px 178px;
+      animation: emil-sway 5s var(--ease-out) infinite;
+    }
+  }
+  @keyframes emil-sway {
+    0%,
+    100% {
+      transform: rotate(-1.2deg);
+    }
+    50% {
+      transform: rotate(1.2deg);
+    }
+  }
+</style>

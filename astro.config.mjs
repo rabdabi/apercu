@@ -20,6 +20,11 @@ export default defineConfig({
   site: SITE,
   output: 'server',
   adapter: node({ mode: 'standalone' }),
+  // Journalism moved from /stories to /perspectives; keep old URLs working.
+  redirects: {
+    '/stories': '/perspectives',
+    '/stories/[...slug]': '/perspectives/[...slug]',
+  },
   // German today; English wired in for a later phase without a refactor.
   i18n: {
     defaultLocale: 'de',

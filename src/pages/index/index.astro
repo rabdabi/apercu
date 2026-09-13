@@ -39,7 +39,7 @@ const slugOf = (id: string) => id.replace(/\/index$/, '');
               <tr>
                 <td class="mono register__num">{pad(i + 1, 4)}</td>
                 <th scope="row" class="register__title">
-                  <a href={`/stories/${slugOf(s.id)}`}>{s.data.title}</a>
+                  <a href={`/perspectives/${slugOf(s.id)}`}>{s.data.title}</a>
                 </th>
                 <td class="mono register__hide-sm">
                   {s.data.topics[0]?.toUpperCase() ?? '—'}

@@ -8,10 +8,12 @@ _Last updated: 2026-09-12. Read this first to resume cold._
 
 ## What Aperçu is
 
-A German-language editorial storytelling platform (Astro 5 SSR, Node standalone,
-TypeScript strict, Tailwind v4 tokens, MariaDB-ready). Text-forward long-form reading
-punctuated by cinematic full-bleed chapters. Plus **Aperçu Motion** — a semi-automated
-pipeline for a recurring 2D animated world (character **Emil**).
+A German-language storytelling platform (Astro 5 SSR, Node standalone, TypeScript
+strict, Tailwind v4 tokens, MariaDB-ready). **Video-first:** the homepage leads with an
+explainer + the animated character **Emil** + the character's films; the **journalism
+(text) is a parallel track at `/perspectives`** (renamed from /stories; old URLs 301).
+Powered by **Aperçu Motion** — a semi-automated pipeline for the animated world
+(Moho films, Rive on the web).
 
 ## Design system (locked)
 
@@ -39,6 +41,12 @@ pipeline for a recurring 2D animated world (character **Emil**).
   `_template`, `plugins/apercu-studio/` skills (`/apercu-story`, `-canon`, `-storyboard`,
   `-modelsheet`, `-rive`, `-publish`, `-captions`). See
   [`docs/PHASE-2-COMMUNITY.md`](PHASE-2-COMMUNITY.md).
+- **Video-first re-architecture:** homepage rebuilt (explainer + animated `EmilFigure` +
+  "Die Filme" featuring *Achtzehn Milliarden* as film → link to text); journalism moved
+  to `/perspectives` (nav "Perspektiven", `/stories/*` → 301). Emil master-character
+  brief at `content-bible/characters/emil/modelsheet-brief.md`; visible SVG stand-in
+  `src/components/story/EmilFigure.astro` (also in the Rive placeholder). Asset swap
+  paths in `docs/media-manifest.md`.
 - Verified each pass: `astro check` 0 errors, production build green.
 
 ## Next (pick up here)

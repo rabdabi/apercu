@@ -17,7 +17,7 @@ export const GET: APIRoute = async (context) => {
       title: s.data.title,
       description: s.data.description,
       pubDate: s.data.publishedAt,
-      link: `/stories/${s.id.replace(/\/index$/, '')}`,
+      link: `/perspectives/${s.id.replace(/\/index$/, '')}`,
       categories: s.data.topics,
     })),
     customData: '<language>de-CH</language>',

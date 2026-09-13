@@ -1,420 +1,317 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import CinematicChapter from '@/components/story/CinematicChapter.astro';
+import FilmPlayer from '@/components/media/FilmPlayer.astro';
+import EmilFigure from '@/components/story/EmilFigure.astro';
+import MetaRule from '@/components/core/MetaRule.astro';
 import Motif from '@/components/story/Motif.astro';
-import {
-  getPublishedStories,
-  getFeaturedStory,
-  getTopics,
-  estimateReadingMinutes,
-} from '@/lib/stories';
-import { formatDate, readingClock, pad } from '@/lib/format';
+import { getFeaturedStory } from '@/lib/stories';
+import { isProduction } from '@/lib/env';
+import { formatDate, pad } from '@/lib/format';
 
 export const prerender = true;
 
-const stories = await getPublishedStories();
 const featured = await getFeaturedStory();
-const topics = await getTopics();
-const selected = stories.filter((s) => s.id !== featured?.id).slice(0, 6);
+const episodes = (
+  await getCollection('episodes', ({ data }) => (isProduction ? data.draft === false : true))
+).sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 
-const slugOf = (id: string) => id.replace(/\/index$/, '');
-const featuredMinutes = featured
-  ? estimateReadingMinutes(featured.body, featured.data.readingMinutes)
-  : 0;
+const slugOf = (id: string) => id.replace(/\/(index|episode)$/, '');
+const filmCount = episodes.length + (featured ? 1 : 0);
 ---
 
 <BaseLayout
   title="Aperçu"
-  description="Aperçu — eine redaktionelle Plattform für Langform-Journalismus über Technologie, Gesellschaft und die Systeme dazwischen."
+  description="Aperçu erzählt in kurzen animierten Filmen von Macht, Geld und Aufmerksamkeit — mit einer wiederkehrenden Figur, Emil. Die Recherchen dazu leben in den Perspektiven."
 >
-  <!-- ── Opening: paper wordmark ────────────────────────────────────────── -->
-  <section class="opening" aria-label="Aperçu">
-    <div class="grid-editorial opening__grid">
-      <p class="mono opening__coord">
-        <span>[ AUSGABE / {pad(1)} — ZÜRICH ]</span>
-        <span class="opening__rule" aria-hidden="true"></span>
-        <span>{formatDate(new Date())}</span>
-      </p>
-      <h1 class="wordmark" aria-label="Aperçu">
-        <span class="wordmark__row">AP</span>
-        <span class="wordmark__row">ER</span>
-        <span class="wordmark__row wordmark__row--accent">ÇU</span>
-      </h1>
-      <p class="opening__tagline">
-        Geschichten für den <em>genaueren</em> Blick.
-      </p>
-      <p class="mono opening__foot">
-        <span aria-hidden="true">↓</span> LANGFORM · TECHNOLOGIE · GESELLSCHAFT
-      </p>
+  <!-- ── Hero: what's going on + the animated character ─────────────────── -->
+  <section class="hero" aria-label="Aperçu">
+    <div class="grid-editorial hero__grid">
+      <MetaRule label="APERÇU — BEWEGTE ESSAYS" value={formatDate(new Date())} />
+
+      <div class="hero__lead">
+        <h1 class="wordmark" aria-label="Aperçu">
+          <span class="wordmark__row">AP</span>
+          <span class="wordmark__row">ER</span>
+          <span class="wordmark__row wordmark__row--accent">ÇU</span>
+        </h1>
+        <p class="hero__intro">
+          Kurze <em>animierte Filme</em> über Macht, Geld und Aufmerksamkeit — erzählt von
+          einer wiederkehrenden Figur.
+        </p>
+      </div>
+
+      <figure class="hero__emil">
+        <EmilFigure pose="idle" sway size={300} />
+        <figcaption class="mono hero__emil-cap">EMIL · PROTAGONIST · PLATZHALTER</figcaption>
+      </figure>
     </div>
+
+    <a href="#worum-es-geht" class="hero__scroll mono">
+      <span>WEITER</span><span class="hero__arrow" aria-hidden="true">↓</span>
+    </a>
   </section>
 
-  <!-- ── Cinematic thesis (the film moment) ─────────────────────────────── -->
+  <!-- ── The premise, as a film moment ──────────────────────────────────── -->
   <CinematicChapter
-    index="I"
-    kicker="MANIFEST"
-    title="Die wichtigsten Veränderungen treten nicht als Ereignis auf, sondern als langsame Verschiebung."
-    lead="Aperçu erzählt Technologie so, wie man sie erlebt — langsam, dann plötzlich."
+    id="worum-es-geht"
+    kicker="Worum es geht"
+    title="Emil steht am Rand der Macht — und sieht, was niemand sehen soll."
+    lead="Eine Welt, in der Reichtum nicht die Kleider ändert, sondern das Bild selbst."
     variant="film"
   >
-    Wir bauen eine Umgebung, in der eine Geschichte atmen darf: grosse Bilder, klare
-    Zahlen, Raum zum Lesen. Kein Feed, keine Kacheln — eine Publikation.
+    Arme Welt: rohe Tinte, leerer Raum, zwei Farben. Reiche Welt: Gold, Ornament,
+    Symmetrie. Dieselbe Figur, dasselbe Universum — nur anders gezeichnet.
   </CinematicChapter>
 
-  <!-- ── Featured story ─────────────────────────────────────────────────── -->
-  {
-    featured && (
-      <section class="grid-editorial feature" aria-labelledby="feature-title" data-reveal>
-        <p class="mono feature__kicker">IM FOKUS / {pad(1)}</p>
-        <a class="feature__link" href={`/stories/${slugOf(featured.id)}`}>
-          <h2 id="feature-title" class="feature__title">
-            {featured.data.title}
-          </h2>
-          {featured.data.subtitle && <p class="feature__sub">{featured.data.subtitle}</p>}
-          <p class="mono feature__meta">
-            {featured.data.topics[0]?.toUpperCase()} · LESEZEIT {readingClock(featuredMinutes)} ·{' '}
-            {formatDate(featured.data.publishedAt)} · WEITERLESEN →
-          </p>
-        </a>
-        <div class="feature__motif" aria-hidden="true">
-          <Motif size={90} />
-        </div>
-      </section>
-    )
-  }
+  <!-- ── The films (the character's animated videos) ────────────────────── -->
+  <section class="films grid-editorial" aria-labelledby="films-title">
+    <MetaRule label="DIE FILME" value={`${pad(filmCount, 3)} · IN PRODUKTION`} />
+    <h2 id="films-title" class="films__title">Die Filme</h2>
 
-  <!-- ── Selected stories ───────────────────────────────────────────────── -->
-  {
-    selected.length > 0 && (
-      <section class="grid-editorial selected" aria-labelledby="selected-title" data-reveal>
-        <div class="selected__head">
-          <h2 id="selected-title" class="selected__heading">
-            Ausgewählte Geschichten
-          </h2>
-          <a class="mono selected__all" href="/stories">
-            ALLE →
-          </a>
+    {
+      featured && (
+        <div class="film-feature col-wide">
+          <FilmPlayer title={featured.data.title} duration="02:31" />
+          <div class="film-feature__meta">
+            <p class="mono film-feature__kick">FILM / 001</p>
+            <h3 class="film-feature__h">{featured.data.title}</h3>
+            {featured.data.subtitle && <p class="film-feature__sub">{featured.data.subtitle}</p>}
+            <a class="mono film-feature__link" href={`/perspectives/${slugOf(featured.id)}`}>
+              → Zur Recherche (Text)
+            </a>
+          </div>
         </div>
-        <ol class="selected__list">
-          {selected.map((s, i) => (
-            <li class="selected__item">
-              <a href={`/stories/${slugOf(s.id)}`} class="selected__row">
-                <span class="mono selected__num">{pad(i + 2)}</span>
-                <span class="selected__body">
-                  <span class="selected__title">{s.data.title}</span>
-                  {s.data.subtitle && <span class="selected__sub">{s.data.subtitle}</span>}
-                </span>
-                <span class="mono selected__topic">{s.data.topics[0]?.toUpperCase()}</span>
+      )
+    }
+
+    {
+      episodes.length > 0 ? (
+        <ol class="films__list col-wide">
+          {episodes.map((e, i) => (
+            <li class="films__item">
+              <a href={`/episodes/${slugOf(e.id)}`} class="films__row">
+                <span class="mono films__num">{pad(i + 2)}</span>
+                <span class="films__name">{e.data.title}</span>
+                <span class="mono films__date">{formatDate(e.data.publishedAt)}</span>
               </a>
             </li>
           ))}
         </ol>
-      </section>
-    )
-  }
+      ) : (
+        <p class="films__note mono col-wide">
+          Weitere Filme sind in Produktion — handgezeichnet in Moho, mit Emil als
+          durchgehender Figur.
+        </p>
+      )
+    }
+  </section>
 
-  <!-- ── Colour interruption (rare red flood) ───────────────────────────── -->
-  <CinematicChapter
-    index="II"
-    kicker="THEMA"
-    title="Wer die Systeme kontrolliert, entscheidet, bevor wir es merken."
-    variant="red"
-    motif={true}
-  />
-
-  <!-- ── Themes ─────────────────────────────────────────────────────────── -->
-  {
-    topics.length > 0 && (
-      <section class="grid-editorial topics" aria-labelledby="topics-title" data-reveal>
-        <h2 id="topics-title" class="mono topics__label">
-          Themen
-        </h2>
-        <ul class="topics__list">
-          {topics.map((t) => (
-            <li>
-              <a href="/index" class="topics__tag">
-                {t.topic} <span class="mono topics__count">{pad(t.count, 2)}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
-
-  <!-- ── Manifesto ──────────────────────────────────────────────────────── -->
-  <section class="grid-editorial manifest" aria-labelledby="manifest-title" data-reveal>
-    <p class="mono manifest__label">Manifest / Fragment</p>
-    <blockquote class="manifest__quote" id="manifest-title">
-      Wir glauben an das <em>lange Schauen</em>. An Geschichten, die sich nicht auf eine
-      Überschrift reduzieren lassen.
-    </blockquote>
-    <a href="/about" class="mono manifest__more">Über Aperçu →</a>
+  <!-- ── Pointer to the journalism track ────────────────────────────────── -->
+  <section class="reading grid-editorial" aria-labelledby="reading-title">
+    <div class="reading__motif" aria-hidden="true"><Motif size={80} /></div>
+    <h2 id="reading-title" class="reading__title">Lieber lesen?</h2>
+    <p class="reading__body">
+      Die journalistische Recherche hinter jedem Film — Zahlen, Quellen, Belege — lebt in
+      den <strong>Perspektiven</strong>.
+    </p>
+    <a href="/perspectives" class="mono reading__link">→ Perspektiven</a>
   </section>
 </BaseLayout>
 
 <style>
-  /* Opening */
-  .opening {
-    padding-block: clamp(2rem, 6vh, 5rem) clamp(3rem, 8vh, 6rem);
-    min-height: min(84vh, 58rem);
+  /* Hero */
+  .hero {
+    padding-block: clamp(2rem, 6vh, 4rem) clamp(2rem, 5vh, 4rem);
+    min-height: min(84vh, 56rem);
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero__grid {
+    row-gap: clamp(2rem, 5vw, 3.5rem);
     align-items: center;
-  }
-  .opening__grid {
-    width: 100%;
-    align-content: center;
-    row-gap: 1.5rem;
-  }
-  .opening__coord {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .opening__rule {
     flex: 1;
-    height: 1px;
-    background: var(--c-line-strong);
+  }
+  .hero__lead {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 55rem) {
+    .hero__lead {
+      grid-column: 1 / 8;
+    }
   }
   .wordmark {
-    grid-column: 1 / -1;
-    font-size: clamp(4.5rem, 22vw, 18rem);
+    font-size: clamp(3.5rem, 14vw, 11rem);
     line-height: 0.82;
     letter-spacing: -0.03em;
-    margin: 0.5rem 0;
+    margin: 0;
     display: grid;
     color: var(--c-ink);
   }
   .wordmark__row--accent {
     color: var(--c-accent);
   }
-  .opening__tagline {
-    grid-column: 1 / -1;
+  .hero__intro {
+    margin-top: 1.4rem;
+    max-width: 30ch;
     font-family: var(--font-body);
-    font-size: clamp(1.4rem, 1rem + 1.8vw, 2.4rem);
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.9rem);
+    line-height: 1.35;
     color: var(--c-ink-dim);
-    max-width: 26ch;
   }
-  .opening__tagline em {
+  .hero__intro em {
     font-style: italic;
     color: var(--c-rubric);
   }
-  @media (min-width: 60rem) {
-    .opening__tagline {
-      grid-column: 7 / -1;
-      justify-self: end;
-      text-align: right;
+  .hero__emil {
+    grid-column: 1 / -1;
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+  }
+  @media (min-width: 55rem) {
+    .hero__emil {
+      grid-column: 9 / -1;
+      justify-items: end;
     }
   }
-  .opening__foot {
-    grid-column: 1 / -1;
+  .hero__emil-cap {
     color: var(--c-ink-faint);
   }
-
-  /* Feature */
-  .feature {
-    padding-block: clamp(3rem, 8vw, 6rem);
-    row-gap: 1rem;
-    position: relative;
+  .hero__scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-inline: var(--gutter);
+    max-width: 1680px;
+    margin-inline: auto;
+    width: 100%;
+    color: var(--c-ink-dim);
   }
-  .feature__kicker {
-    grid-column: 1 / -1;
-    color: var(--c-accent);
+  .hero__arrow {
+    animation: nudge 1.8s var(--ease-out) infinite;
   }
-  .feature__link {
-    grid-column: 1 / -1;
-    display: block;
-  }
-  @media (min-width: 60rem) {
-    .feature__link {
-      grid-column: 1 / 11;
+  @keyframes nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(4px);
     }
   }
-  .feature__title {
-    font-size: clamp(2.6rem, 1.5rem + 7vw, 8rem);
+  @media (prefers-reduced-motion: reduce) {
+    .hero__arrow {
+      animation: none;
+    }
+  }
+
+  /* Films */
+  .films {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    border-top: 1px solid var(--c-line);
+    row-gap: 1.5rem;
+  }
+  .films__title {
+    grid-column: 1 / -1;
+    font-size: clamp(2.4rem, 1.5rem + 5vw, 6rem);
     line-height: 0.95;
     color: var(--c-ink);
-    transition: color 0.25s var(--ease-out);
   }
-  .feature__link:hover .feature__title {
-    color: var(--c-rubric);
-  }
-  .feature__sub {
-    font-family: var(--font-body);
-    font-size: clamp(1.2rem, 1rem + 1vw, 1.7rem);
-    color: var(--c-ink-dim);
-    max-width: 44ch;
-    margin-block: 1.2rem;
-  }
-  .feature__meta {
-    color: var(--c-ink-faint);
-  }
-  .feature__motif {
-    display: none;
-    color: var(--c-line-strong);
+  .film-feature {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
   }
   @media (min-width: 60rem) {
-    .feature__motif {
-      display: block;
-      grid-column: 11 / -1;
-      align-self: end;
+    .film-feature {
+      grid-template-columns: 1.6fr 1fr;
+      align-items: end;
     }
   }
-
-  /* Selected */
-  .selected {
-    padding-block: clamp(2rem, 6vw, 4rem);
-    border-top: 1px solid var(--c-line);
-    row-gap: 2rem;
-  }
-  .selected__head {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-  }
-  .selected__heading {
-    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
-    color: var(--c-ink);
-  }
-  .selected__all {
-    color: var(--c-ink-dim);
-  }
-  .selected__all:hover {
-    color: var(--c-rubric);
-  }
-  .selected__list {
-    grid-column: 1 / -1;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid var(--c-line);
-  }
-  .selected__row {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    gap: 0.4rem 1.2rem;
-    padding: 1.5rem 0;
-    border-bottom: 1px solid var(--c-line);
-    align-items: start;
-  }
-  @media (min-width: 55rem) {
-    .selected__row {
-      grid-template-columns: 3rem 1fr 10rem;
-      align-items: baseline;
-    }
-  }
-  .selected__num {
-    color: var(--c-ink-faint);
-  }
-  .selected__title {
-    display: block;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1.4rem, 1.1rem + 1.6vw, 2.4rem);
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-    color: var(--c-ink);
-    transition: color 0.2s var(--ease-out);
-  }
-  .selected__row:hover .selected__title {
-    color: var(--c-rubric);
-  }
-  .selected__sub {
-    display: block;
-    color: var(--c-ink-dim);
-    margin-top: 0.4rem;
-    max-width: 52ch;
-  }
-  .selected__topic {
-    color: var(--c-ink-faint);
-  }
-  @media (min-width: 55rem) {
-    .selected__topic {
-      text-align: right;
-    }
-  }
-
-  /* Topics */
-  .topics {
-    padding-block: clamp(2rem, 6vw, 4rem);
-    border-top: 1px solid var(--c-line);
-    row-gap: 1.5rem;
-  }
-  .topics__label {
-    grid-column: 1 / -1;
-    color: var(--c-ink-faint);
-  }
-  .topics__list {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .topics__tag {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    padding: 0.6rem 1rem;
-    border: 1px solid var(--c-line-strong);
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    color: var(--c-ink);
-    transition:
-      border-color 0.2s var(--ease-out),
-      color 0.2s var(--ease-out);
-  }
-  .topics__tag:hover {
-    border-color: var(--c-rubric);
-    color: var(--c-rubric);
-  }
-  .topics__count {
-    color: var(--c-ink-faint);
-  }
-
-  /* Manifest */
-  .manifest {
-    padding-block: clamp(3rem, 8vw, 6rem);
-    border-top: 1px solid var(--c-line);
-    row-gap: 1.5rem;
-  }
-  .manifest__label {
-    grid-column: 1 / -1;
+  .film-feature__kick {
     color: var(--c-accent);
   }
-  .manifest__quote {
-    grid-column: 1 / -1;
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(1.6rem, 1.1rem + 2.6vw, 3.4rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    max-width: 20ch;
-    text-wrap: balance;
-    color: var(--c-ink);
+  .film-feature__h {
+    font-size: clamp(1.8rem, 1.2rem + 3vw, 3.4rem);
+    line-height: 1;
+    margin: 0.4rem 0 0.6rem;
   }
-  .manifest__quote em {
-    font-family: var(--font-body);
-    font-style: italic;
+  .film-feature__sub {
+    color: var(--c-ink-dim);
+    max-width: 40ch;
+    margin-bottom: 1rem;
+  }
+  .film-feature__link {
     color: var(--c-rubric);
   }
+  .films__note {
+    color: var(--c-ink-faint);
+    max-width: 52ch;
+    padding-top: 1rem;
+    line-height: 1.8;
+  }
+  .films__list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--c-line);
+  }
+  .films__row {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto;
+    gap: 1.2rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--c-line);
+    align-items: baseline;
+  }
+  .films__num {
+    color: var(--c-ink-faint);
+  }
+  .films__name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.3rem, 1rem + 1.6vw, 2.2rem);
+    letter-spacing: -0.02em;
+  }
+  .films__row:hover .films__name {
+    color: var(--c-rubric);
+  }
+  .films__date {
+    color: var(--c-ink-faint);
+  }
+
+  /* Reading pointer */
+  .reading {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    border-top: 1px solid var(--c-line);
+    row-gap: 1rem;
+  }
+  .reading__motif {
+    grid-column: 1 / -1;
+    color: var(--c-line-strong);
+  }
+  .reading__title {
+    grid-column: 1 / -1;
+    font-size: clamp(1.8rem, 1.2rem + 3vw, 3.4rem);
+    color: var(--c-ink);
+  }
+  .reading__body {
+    grid-column: 1 / -1;
+    max-width: 46ch;
+    color: var(--c-ink-dim);
+    font-size: 1.1rem;
+  }
   @media (min-width: 60rem) {
-    .manifest__quote {
-      grid-column: 2 / 11;
-      max-width: 24ch;
+    .reading__body {
+      grid-column: 1 / 8;
     }
   }
-  .manifest__more {
+  .reading__link {
     grid-column: 1 / -1;
-    color: var(--c-ink-dim);
-  }
-  .manifest__more:hover {
     color: var(--c-rubric);
   }
 </style>

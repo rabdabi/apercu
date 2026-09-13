@@ -100,12 +100,17 @@ export default function RiveCharacter({
   if (!src || failed) {
     return (
       <div className="emil-placeholder" role="img" aria-label={`${label} (Platzhalter)`}>
-        <svg viewBox="0 0 120 160" width="120" height="160" aria-hidden="true">
-          <ellipse cx="60" cy="40" rx="30" ry="28" fill="#d9ccaa" stroke="#241f1a" strokeWidth="2" />
-          <path d="M32 34 Q60 6 88 34 Q84 20 60 16 Q36 20 32 34Z" fill="#c0562f" stroke="#241f1a" strokeWidth="2" />
-          <path d="M48 40 q4 5 0 9" fill="none" stroke="#241f1a" strokeWidth="2" />
-          <path d="M40 34 l7 2 M80 34 l-7 2" stroke="#241f1a" strokeWidth="2" />
-          <path d="M40 66 L34 150 L86 150 L80 66 Q60 78 40 66Z" fill="#b07a4f" stroke="#241f1a" strokeWidth="2" />
+        <svg viewBox="0 0 120 170" width="120" height="170" aria-hidden="true">
+          <g stroke="#241f1a" strokeWidth="2" strokeLinejoin="round">
+            <path d="M42 60 L36 150 L84 150 L79 60 Z" fill="#d9ccaa" />
+            <path d="M50 56 L60 70 L70 56 L79 60 L60 78 L41 60 Z" fill="#6f7466" />
+            <path d="M60 8 q22 0 22 22 q0 20 -22 24 q-22 -4 -22 -24 q0 -22 22 -22 Z" fill="#b07a4f" />
+            <path d="M36 32 C36 9 46 4 60 4 C74 4 84 9 84 32 C78 25 70 26 63 28 C61 25 59 25 57 28 C50 26 42 25 36 32 Z" fill="#c0562f" />
+            <path d="M45 28 l10 1 M65 29 l10 -1" strokeWidth="1.8" />
+            <path d="M60 36 q-3 5 0 8" fill="none" strokeWidth="1.8" />
+            <circle cx="51" cy="34" r="1.6" fill="#241f1a" stroke="none" />
+            <circle cx="69" cy="34" r="1.6" fill="#241f1a" stroke="none" />
+          </g>
         </svg>
         <span className="emil-placeholder__tag">EMIL · RIVE-ASSET AUSSTEHEND</span>
         <style>{`
