@@ -28,3 +28,6 @@ Thumbs.db
 playwright-report/
 test-results/
 coverage/
+
+# Local third-party tooling (Moho MCP server clone) — not part of Aperçu source
+tools/moho-mcp/
