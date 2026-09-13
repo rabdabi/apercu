@@ -9,7 +9,7 @@ import tailwindcss from '@tailwindcss/vite';
 // The canonical production origin. Overridable at deploy time via PUBLIC_SITE_URL,
 // but baked here as the default so the build (sitemap, canonical, OG) is correct
 // even before env vars are set.
-const SITE = process.env.PUBLIC_SITE_URL ?? 'https://apercu.tech';
+const SITE = process.env.PUBLIC_SITE_URL ?? 'https://apercu.org';
 
 // Dev server port. In production the @astrojs/node standalone entry reads
 // process.env.PORT itself (see docs/DEPLOY-INFOMANIAK.md), so we never hard-code

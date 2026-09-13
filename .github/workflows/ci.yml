@@ -29,5 +29,5 @@ jobs:
       - name: Production build
         run: npm run build
         env:
-          PUBLIC_SITE_URL: https://apercu.tech
+          PUBLIC_SITE_URL: https://apercu.org
           NODE_ENV: production

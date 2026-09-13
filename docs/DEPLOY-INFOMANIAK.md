@@ -4,14 +4,6 @@ This guide describes deploying Aperçu to **Infomaniak's managed Node.js hosting
 GitHub as the source of truth. It contains **no credentials** — every secret is entered
 in the Infomaniak Manager or your Git provider, never in this repository.
 
-## Domains
-
-- **Deploy target now:** `apercu.tech` — attach this and set
-  `PUBLIC_SITE_URL=https://apercu.tech`.
-- **Future master:** `apercu.org` — currently **inactive**. When it goes live, point it at
-  the same app, change `PUBLIC_SITE_URL` to `https://apercu.org`, rebuild, and 301 the
-  other host to it.
-
 ## Repository access (private repo)
 
 `rabdabi/apercu` is **private**. Two supported ways for Infomaniak to pull it — no
@@ -54,14 +46,14 @@ defaults to `4321`; in production it binds whatever port Infomaniak provides.
    in code or in the start command.
 8. **Set environment variables** in the Manager:
    - `NODE_ENV=production`
-   - `PUBLIC_SITE_URL=https://your-domain` (e.g. `https://apercu.tech`)
+   - `PUBLIC_SITE_URL=https://your-domain` (e.g. `https://apercu.org`)
    - `PORT` — only if Infomaniak asks you to set it explicitly; otherwise it is provided.
 9. **Configure `DATABASE_URL`** _only if_ you enable MariaDB:
    `mysql://USER:PASSWORD@HOST:PORT/DATABASE`. Create the database in the Manager first,
    then run migrations (see below). Without it, the site runs fine but form submissions
    are not persisted (they return an explicit non-persistent response).
-10. **Attach the domain** `apercu.tech` to the application.
-11. **Enable the HTTPS certificate** (Let's Encrypt) for `apercu.tech`.
+10. **Attach the domain** `apercu.org` to the application.
+11. **Enable the HTTPS certificate** (Let's Encrypt) for `apercu.org`.
 12. **Build** the application from the Manager.
 13. **Start / restart** the application.
 14. **Verify `/api/health`** returns `{"status":"ok", ...}` and shows
