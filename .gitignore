@@ -29,5 +29,17 @@ playwright-report/
 test-results/
 coverage/
 
-# Local third-party tooling (Moho MCP server clone) — not part of Aperçu source
+# Local third-party tooling (Moho MCP server clone) — not part of Aperçu source.
+# Reproduce with: gh repo clone neosh11/moho-mcp-server tools/moho-mcp (pinned SHA in
+# docs/MOHO-MCP-SETUP.md) then `npm ci && npm run build`. Install script is tracked.
 tools/moho-mcp/
+
+# Moho production artifacts — keep masters/finals/stills + rig YAML; ignore heavy/scratch
+animation/moho/backups/
+animation/renders/previews/
+animation/exports/archive/
+
+# Moho MCP file-IPC scratch (normally under the system temp dir, ignored if it lands here)
+**/moho-mcp/req_*.json
+**/moho-mcp/resp_*.json
+**/moho-mcp/status.json
