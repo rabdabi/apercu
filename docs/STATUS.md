@@ -63,18 +63,6 @@ Powered by **Aperçu Motion** — a semi-automated pipeline for the animated wor
   it builds Emil's `.riv` with the **Rive CLI + RML** (eyes follow cursor, hover + click
   reactions), then wires it in (`public/media/emil.riv`, enhance `RiveCharacter.tsx` to feed
   `pointerX/Y`, swap the homepage). Runs against the existing `state` / `emil:state` contract.
-- **Moho MCP animation subsystem** (2026-09-13): local bridge so Claude Code drives
-  **Moho Pro 14** as an authored 2D-animation tool (not AI video). Bridge =
-  `neosh11/moho-mcp-server` v0.1.0 (Apache-2.0, SHA `8e1925d`), cloned+built at
-  `tools/moho-mcp/` (git-ignored, reproduce via clone+build). Lua plugin installed into
-  `/Applications/Moho.app` by `tools/install-moho-plugin.sh` (path-corrected wrapper).
-  Project MCP config `.mcp.json` → `moho-mcp` (node → local dist). Director skill
-  `plugins/apercu-studio/skills/apercu-animation/` (+ 4 refs). Moho binaries/renders/
-  exports/rig-maps live in new `animation/` (canon stays in `content-bible/`, scenes in
-  `episodes/*/moho-scenes.json`). Full recovery + manual steps:
-  [`docs/MOHO-MCP-SETUP.md`](MOHO-MCP-SETUP.md); workflows: `ANIMATION-/CHARACTER-/SCENE-WORKFLOW.md`.
-  **Verified:** bundle builds, starts, lists 26 tools. **Pending human:** Accessibility
-  grant, Claude Code restart, then start MohoMCP in Moho → live read/write/PoC tests.
 - Verified each pass: `astro check` 0 errors, production build green.
 
 ## Next (pick up here)
