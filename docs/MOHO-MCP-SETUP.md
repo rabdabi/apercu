@@ -70,11 +70,29 @@ Re-run it any time to reinstall/update.
 ```json
 { "mcpServers": { "moho-mcp": {
   "command": "node",
-  "args": ["/Users/raberer/dev_rab/apercutechno27/tools/moho-mcp/dist/moho-mcp-server.mjs"] } } }
+  "args": ["/Users/raberer/dev_rab/apercutechno27/tools/moho-mcp/dist/moho-mcp-server.mjs"],
+  "env": { "MOHO_MCP_IPC_DIR": "/var/folders/2w/vm6mp76j4_50khbb14tl0fx00000gn/T/moho-mcp" } } } }
 ```
 
 `args` is an absolute path so the server launches regardless of Claude Code's cwd.
 If the repo moves, update this path and `tools/install-moho-plugin.sh` will still find Moho.
+
+**Why the `env.MOHO_MCP_IPC_DIR`? (critical fix, 2026-09-15):** the bridge picks its IPC
+folder from Node's `os.tmpdir()`, which returns `/tmp` when `TMPDIR` is unset in the
+bridge's launch environment — but the Moho Lua plugin uses Moho's own `TMPDIR`
+(`$(getconf DARWIN_USER_TEMP_DIR)/moho-mcp`, e.g.
+`/var/folders/2w/…/T/moho-mcp`). If they differ, the bridge writes requests to a folder
+Moho never reads → every call fails with "MOHO MCP server is not running. No status file".
+Pinning `MOHO_MCP_IPC_DIR` to Moho's folder forces both sides to agree. The value is this
+user's stable Darwin per-user temp (persists across reboots); confirm with
+`getconf DARWIN_USER_TEMP_DIR`. This must also match what the console prints on
+"MohoMCP Server started. IPC directory: …" (a harmless double slash there is the same path).
+
+**Single registration.** `moho-mcp` must be defined once. A parallel session had also
+registered it at **user scope** pointing at a second clone (`~/mcp-servers/MohoMCP`,
+`Kveto/MohoMCP`); that was removed (`claude mcp remove moho-mcp -s user`) so only the
+project-scope neosh11 bridge remains — the one whose Lua plugin is actually installed in
+Moho. Do not run two bridges against the same IPC dir (they collide on request IDs).
 
 ## MANUAL ACTION REQUIRED
 
@@ -121,6 +139,54 @@ These need you (a human) at macOS / Moho. Everything else is already done.
 | Plugin missing from Scripts menu | Re-run `bash tools/install-moho-plugin.sh`; restart Moho. |
 | `mkdir … Operation not permitted` during install | App Management permission not granted (manual step 1). |
 | `moho-mcp` absent from `claude mcp list` | Claude Code not restarted after `.mcp.json`, or JSON invalid (`node -e 'require("./.mcp.json")'`). |
+
+## macOS polling — known issue & operating modes (2026-09-15)
+
+**Symptom:** the connection is correct (folder shared, `status.json running:true`, console
+shows all handlers + `Injected polling into 21 tool DrawMe callbacks`), yet tool calls time
+out — a request file (`req_<id>.json`) is written but **never consumed**.
+
+**Cause:** the plugin only calls `poll()` from Moho tool `DrawMe` callbacks and the Server
+menu's `IsEnabled` — all **viewport-repaint / UI-validation driven**. On macOS, background
+apps are throttled and Moho 14.4's `moho:UpdateUI()` does not reliably self-sustain repaints,
+so the poll loop stalls unless Moho is actively generating repaints. This is an upstream
+limitation (commit `8e1925d`, no fix upstream), not a config error in this repo.
+
+**Verified working once:** a `document.getInfo` returned real data
+(`Untitled.moho`, 1200×1224, 24fps, frames 1–143) while the user was actively moving the
+mouse in the canvas — so the pipeline is sound; the open problem is *keeping the poller fed*.
+
+**Operating modes:**
+- **Manual (no extra permission):** keep the mouse actively moving/dragging **inside the
+  Moho canvas** while a tool call runs. Batch operations (`batch_execute`) so one interaction
+  window covers many ops. Fragile but needs nothing installed.
+- **Hands-free (needs Accessibility):** run **`tools/moho-keepalive.sh`** from a terminal
+  that has Accessibility permission (Terminal.app / iTerm are far easier to authorize than
+  Claude's nested helper app). It nudges Moho's canvas ~2×/sec via `cliclick` so the poller
+  stays fed with zero manual scribbling; Ctrl-C to stop. The cursor briefly hops into the
+  Moho window each tick (it only *moves*, never clicks), so run it during a working session.
+  The bridge also ships a built-in keep-alive, but its macOS path is buggy (an `on idle`
+  handler that `osascript` never loops) — the standalone script supersedes it. Confirmed
+  fact: when Moho *is* being fed repaints (real scribbling), calls return in ~1s — so this
+  script is the reliable way to sustain that automatically.
+
+**Accessibility — which app:** the process tree is
+`zsh → …/claude-code/<ver>/claude.app → /Applications/Claude.app/Contents/Helpers/disclaimer
+→ /Applications/Claude.app`. macOS attributes TCC to the top app, so enable
+**`/Applications/Claude.app`** in System Settings ▸ Privacy & Security ▸ Accessibility, then
+**fully Quit (⌘Q) and reopen** the app (a new grant never applies to an already-running
+process). Verify instantly (no Moho needed) with `cliclick p` — it must print coordinates,
+not the "Accessibility privileges not enabled" warning. Caveat: the helper path is
+version-stamped (`claude-code/<ver>/claude.app`), so a Claude Code auto-update can reset the
+grant; re-add if `cliclick` starts failing after an update.
+
+**Diagnose from the filesystem (no GUI needed):**
+```bash
+D="$(getconf DARWIN_USER_TEMP_DIR)moho-mcp"
+cat "$D/status.json"                 # {"running":true,...} => server started
+printf '%s' '{"jsonrpc":"2.0","id":1,"method":"document.getInfo","params":{}}' > "$D/req_1.json"
+sleep 5; ls "$D/req_1.json" 2>/dev/null && echo "NOT consumed (poller idle)" || cat "$D/resp_1.json"
+```
 
 ## Update safely
 
