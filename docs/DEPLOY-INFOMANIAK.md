@@ -1,19 +1,26 @@
 # Deploying Aperçu to Infomaniak (managed Node.js)
 
-This guide describes deploying Aperçu to **Infomaniak's managed Node.js hosting** with
-GitHub as the source of truth. It contains **no credentials** — every secret is entered
-in the Infomaniak Manager or your Git provider, never in this repository.
+This guide describes deploying Aperçu to **Infomaniak's managed Node.js hosting** via
+**direct git push to Infomaniak's own remote**. GitHub (`rabdabi/apercu`) remains a
+secondary remote for backup/history, but Infomaniak no longer pulls from it. It contains
+**no credentials** — every secret is entered in the Infomaniak Manager, never in this
+repository.
 
-## Repository access (private repo)
+## Repository access (git push deploy)
 
-`rabdabi/apercu` is **private**. Two supported ways for Infomaniak to pull it — no
-credentials go in this repo:
+The local repo has two remotes:
 
-1. **GitHub authorization** — in the Manager's Git step, authorize Infomaniak's GitHub
-   integration for your account; select `rabdabi/apercu` and branch `main`. (Simplest.)
-2. **SSH deploy key** — if the Manager gives you a public key, add it under
-   GitHub → the repo → **Settings → Deploy keys** (read-only is enough), then use the
-   SSH clone URL.
+- `origin` → `github.com/rabdabi/apercu` (backup/history)
+- `infomaniak` → the git remote given in the Manager's Git deployment step
+
+Deploy by pushing the branch Infomaniak is configured to build from:
+
+```bash
+git push infomaniak main
+```
+
+If Infomaniak issued an SSH key for the connection, make sure it's loaded in your SSH
+agent (`ssh-add ~/.ssh/<key>`) before pushing.
 
 ## What the app expects
 
@@ -35,8 +42,9 @@ defaults to `4321`; in production it binds whatever port Infomaniak provides.
    application for your domain/subdomain.
 2. **Choose custom installation** (not a one-click template) so you control the build
    and start commands.
-3. **Connect the Git repository.** Point it at the GitHub repository and the branch you
-   deploy from (e.g. `main`).
+3. **Connect the Git repository.** Choose the git-push deployment method; the Manager
+   gives you a remote URL — add it locally as `git remote add infomaniak <url>` and
+   deploy with `git push infomaniak main`.
 4. **Select Node.js 22 LTS** to match this project.
 5. **Configure the build command:** `npm ci && npm run build`.
    (`npm ci` requires the committed `package-lock.json`, which is present.)
@@ -46,14 +54,14 @@ defaults to `4321`; in production it binds whatever port Infomaniak provides.
    in code or in the start command.
 8. **Set environment variables** in the Manager:
    - `NODE_ENV=production`
-   - `PUBLIC_SITE_URL=https://your-domain` (e.g. `https://apercu.org`)
+   - `PUBLIC_SITE_URL=https://your-domain` (e.g. `https://apercu.tech`)
    - `PORT` — only if Infomaniak asks you to set it explicitly; otherwise it is provided.
 9. **Configure `DATABASE_URL`** _only if_ you enable MariaDB:
    `mysql://USER:PASSWORD@HOST:PORT/DATABASE`. Create the database in the Manager first,
    then run migrations (see below). Without it, the site runs fine but form submissions
    are not persisted (they return an explicit non-persistent response).
-10. **Attach the domain** `apercu.org` to the application.
-11. **Enable the HTTPS certificate** (Let's Encrypt) for `apercu.org`.
+10. **Attach the domain** `apercu.tech` to the application.
+11. **Enable the HTTPS certificate** (Let's Encrypt) for `apercu.tech`.
 12. **Build** the application from the Manager.
 13. **Start / restart** the application.
 14. **Verify `/api/health`** returns `{"status":"ok", ...}` and shows
@@ -93,7 +101,7 @@ database or a shared store.
 
 ## Zero-downtime redeploys
 
-Deploys are driven by pushing to the connected branch. Rebuild + restart from the
-Manager (or your configured auto-deploy). No deployment secrets live in the repository,
-so the included GitHub Actions workflow only runs checks/build on pull requests — it
-does **not** deploy.
+Deploys are driven by `git push infomaniak main`. Rebuild + restart from the Manager (or
+your configured auto-deploy on push). No deployment secrets live in the repository, so
+the included GitHub Actions workflow only runs checks/build on pull requests against
+GitHub — it does **not** deploy.
