@@ -1,9 +1,11 @@
 # Aperçu — project status & handoff
 
-_Last updated: 2026-09-12. Read this first to resume cold._
+_Last updated: 2026-09-18. Read this first to resume cold._
 
 **Repo:** https://github.com/rabdabi/apercu (private, branch `main`, fully pushed)
-**Production domain (target):** https://apercu.org — not yet deployed.
+**Production domain:** https://apercu.org — **live** on Infomaniak managed Node.js
+(`www.apercu.org` redirects to apex). Pull-based deploy: `git push origin main`, then
+Build + Restart in the Manager. See [`docs/DEPLOY-INFOMANIAK.md`](DEPLOY-INFOMANIAK.md).
 **Local:** `nvm use` (Node 22) · `npm install` · `npm run dev` → http://localhost:4321
 
 ## What Aperçu is
@@ -67,18 +69,15 @@ Powered by **Aperçu Motion** — a semi-automated pipeline for the animated wor
 
 ## Next (pick up here)
 
-1. **Deploy to Infomaniak** — needs the Manager (I can't do it): connect `rabdabi/apercu`,
-   Node 22, build `npm ci && npm run build`, start `npm start`, env `NODE_ENV=production` +
-   `PUBLIC_SITE_URL=https://apercu.org`, let it inject `PORT`. Private repo → add
-   Infomaniak's deploy key or make repo public. Steps: [`docs/DEPLOY-INFOMANIAK.md`](DEPLOY-INFOMANIAK.md).
-2. Optional: flip repo public (one command) for the Git connection; add a GitHub Actions
-   deploy once the deploy key exists.
-3. ~~Source the `achtzehn-milliarden` figures~~ **DONE** — now real & cited (CNBC,
+1. ~~Deploy to Infomaniak~~ **DONE** — live at apercu.org. Redeploy flow going forward:
+   `git push origin main`, then click **Build** then **Restart** in the Manager (no
+   auto-deploy webhook on this hosting tier). See [`docs/DEPLOY-INFOMANIAK.md`](DEPLOY-INFOMANIAK.md).
+2. ~~Source the `achtzehn-milliarden` figures~~ **DONE** — now real & cited (CNBC,
    TechCrunch, WSJ/Gulf News). Remaining: swap generated visuals for real
    photography/film via media `src` when available.
-4. Real Emil: run `/apercu-modelsheet` → model sheet; drop a `.riv` at
+3. Real Emil: run `/apercu-modelsheet` → model sheet; drop a `.riv` at
    `public/episodes/<slug>/emil.riv` to activate the living character.
-5. Later phases: community/auth, the agentic Aperçu (Phase 2 doc).
+4. Later phases: community/auth, the agentic Aperçu (Phase 2 doc).
 
 ## Key commands
 
