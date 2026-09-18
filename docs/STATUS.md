@@ -3,7 +3,7 @@
 _Last updated: 2026-09-12. Read this first to resume cold._
 
 **Repo:** https://github.com/rabdabi/apercu (private, branch `main`, fully pushed)
-**Production domain (target):** https://apercu.tech — not yet deployed.
+**Production domain (target):** https://apercu.org — not yet deployed.
 **Local:** `nvm use` (Node 22) · `npm install` · `npm run dev` → http://localhost:4321
 
 ## What Aperçu is
@@ -69,7 +69,7 @@ Powered by **Aperçu Motion** — a semi-automated pipeline for the animated wor
 
 1. **Deploy to Infomaniak** — needs the Manager (I can't do it): connect `rabdabi/apercu`,
    Node 22, build `npm ci && npm run build`, start `npm start`, env `NODE_ENV=production` +
-   `PUBLIC_SITE_URL=https://apercu.tech`, let it inject `PORT`. Private repo → add
+   `PUBLIC_SITE_URL=https://apercu.org`, let it inject `PORT`. Private repo → add
    Infomaniak's deploy key or make repo public. Steps: [`docs/DEPLOY-INFOMANIAK.md`](DEPLOY-INFOMANIAK.md).
 2. Optional: flip repo public (one command) for the Git connection; add a GitHub Actions
    deploy once the deploy key exists.

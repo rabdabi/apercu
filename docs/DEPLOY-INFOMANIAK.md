@@ -54,14 +54,16 @@ defaults to `4321`; in production it binds whatever port Infomaniak provides.
    in code or in the start command.
 8. **Set environment variables** in the Manager:
    - `NODE_ENV=production`
-   - `PUBLIC_SITE_URL=https://your-domain` (e.g. `https://apercu.tech`)
+   - `PUBLIC_SITE_URL=https://your-domain` (e.g. `https://apercu.org`)
    - `PORT` — only if Infomaniak asks you to set it explicitly; otherwise it is provided.
 9. **Configure `DATABASE_URL`** _only if_ you enable MariaDB:
    `mysql://USER:PASSWORD@HOST:PORT/DATABASE`. Create the database in the Manager first,
    then run migrations (see below). Without it, the site runs fine but form submissions
    are not persisted (they return an explicit non-persistent response).
-10. **Attach the domain** `apercu.tech` to the application.
-11. **Enable the HTTPS certificate** (Let's Encrypt) for `apercu.tech`.
+10. **Attach the domains** `apercu.org` and `www.apercu.org` to the application (redirect
+    `www` → apex, or vice versa, per your canonical choice).
+11. **Enable the HTTPS certificate** (Let's Encrypt) for both `apercu.org` and
+    `www.apercu.org`.
 12. **Build** the application from the Manager.
 13. **Start / restart** the application.
 14. **Verify `/api/health`** returns `{"status":"ok", ...}` and shows
