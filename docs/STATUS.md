@@ -15,7 +15,10 @@ strict, Tailwind v4 tokens, MariaDB-ready). **Video-first:** the homepage leads 
 explainer + the animated character **Emil** + the character's films; the **journalism
 (text) is a parallel track at `/perspectives`** (renamed from /stories; old URLs 301).
 Powered by **Aperçu Motion** — a semi-automated pipeline for the animated world
-(Moho films, Rive on the web).
+(Moho films, Rive on the web). A separate **3D track** (Blender: a rigged Emil,
+environments, a proof-of-concept short) lives in its own repo,
+[`rabdabi/apercu-animation`](https://github.com/rabdabi/apercu-animation) — not in this
+repo, since this one gets pulled directly onto the production server.
 
 ## Design system (locked)
 
